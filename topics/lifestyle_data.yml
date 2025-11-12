@@ -1,0 +1,22 @@
+type: topic
+base_view: lifestyle
+model_name: strum_platform_model
+label: Lifestyle Data
+description: >-
+  The 'Lifestyle Data' topic encompasses various demographic and personal
+  interest metrics. It includes "DESCRIPTION," providing a general overview of
+  lifestyle characteristics. "AVGAGE" represents the average age of individuals
+  within a specific lifestyle group. "AVGINCOME" gives the average income for
+  these individuals. The "PROFILE" field details distinct characteristics that
+  describe the lifestyle group. Lastly, "INTERESTS" lists common hobbies or
+  topics of interest, capturing what engages the individuals within the group.
+  This topic helps in understanding consumer segments and tailoring marketing
+  strategies.
+zoe_description: >-
+  The 'Lifestyle Data' topic includes descriptive and average metrics for
+  lifestyle groups. It comprises average age (AVGAGE), average income
+  (AVGINCOME), profiles, and interests of these groups. Use this data to
+  understand demographic and interest patterns for targeted analysis or
+  marketing strategies.
+hidden: false
+views: {}

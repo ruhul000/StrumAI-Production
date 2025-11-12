@@ -1,0 +1,38 @@
+version: 2
+models:
+  - name: account_profit_derived
+    description: Derived table for account profit data with additional computed columns
+    columns:
+      - name: acctid
+        description: Account ID
+      - name: orig_date
+        description: Original date of account creation
+      - name: cur_bal
+        description: Current account balance
+      - name: avg_bal
+        description: Average account balance
+      - name: profit_ratio
+        description: Profit ratio calculated as profit divided by current balance
+      - name: delinquency_rate
+        description: Delinquency rate calculated as del_days divided by term
+    tests: []
+    meta: {}
+    derived_table:
+      sql: |
+        SELECT 
+          acctid,
+          orig_date,
+          cur_bal,
+          avg_bal,
+          profit,
+          del_days,
+          term,
+          CASE 
+            WHEN cur_bal > 0 THEN profit / cur_bal
+            ELSE NULL
+          END AS profit_ratio,
+          CASE 
+            WHEN term > 0 THEN del_days / term
+            ELSE NULL
+          END AS delinquency_rate
+        FROM Client_68696.dbo.AccountProfit

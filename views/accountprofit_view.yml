@@ -1,0 +1,2531 @@
+version: 1
+type: view
+name: account_profit
+description: >-
+  The monthly snapshot table with account profit information. To look at this
+  data accurately, you must ALWAYS filter for a specific month using the
+  data_period_date using the last day of the month. Ask the user to specify the
+  period, if they did not initially
+model_name: strum_platform_model
+sql_table_name: dbo.AccountProfit
+default_date: data_period
+identifiers:
+- name: acctid
+  type: primary
+  sql: concat(${acctid}, ${data_period_raw})
+fields:
+- name: acctid
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Account ID
+  description: Unique ID for each account record
+  sql: ${TABLE}.acctid
+  searchable: false
+
+- name: prim_key
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: true
+  sql: concat(${acctid}, ${data_period_raw})
+
+- name: term
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Term of the account
+  sql: ${TABLE}.term
+  searchable: false
+
+- name: orig_bal
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Account Original Balance
+  description: Original Balance of the account
+  sql: ${TABLE}.orig_bal
+  searchable: false
+  synonyms:
+  - Original Balance, opening balance, initial balance
+
+- name: cur_bal
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Account Current Balance
+  description: This is the Current Balance of the individual account.
+  sql: ${TABLE}.cur_bal
+  searchable: false
+  synonyms:
+  - Balance, Current Balance, Account Balance
+
+- name: avg_bal
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: AC Avg Bal
+  description: Average Balance for the data period
+  sql: ${TABLE}.avg_bal
+  searchable: false
+
+- name: prior_bal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Account balance in prior data period
+  sql: ${TABLE}.prior_bal
+  searchable: false
+
+- name: min_bal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.min_bal
+  searchable: false
+
+- name: currency
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.currency
+  searchable: true
+
+- name: commitment
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Maximum Line of Credit
+  sql: ${TABLE}.commitment
+  searchable: false
+
+- name: available_credit
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Available Credit, the same as the Commitment minus the Cur Bal
+  sql: ${TABLE}.availcred
+  searchable: false
+  synonyms:
+  - Available credit
+  - Maximum line
+
+- name: intrate
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Account Interest Rate
+  sql: ${TABLE}.intrate
+  searchable: false
+
+- name: pintrate
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pintrate
+  searchable: false
+
+- name: cur_pi
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.cur_pi
+
+- name: intincome
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: AC Interest Income
+  description: The actual interest income collected on the account for the period.
+  sql: ${TABLE}.intincome
+  searchable: false
+
+- name: intexpense
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: AC Interest Expense
+  description: The actual interest expense paid to the account for the period.
+  sql: ${TABLE}.intexpense
+  searchable: false
+
+- name: trnrate
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.trnrate
+  searchable: false
+
+- name: part_pct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.part_pct
+  searchable: false
+
+- name: dollarsold
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.dollarsold
+  searchable: false
+
+- name: credit_grade
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Ac Credit Grade
+  description: Borrower credit rating assigned by Bank on original application
+  sql: ${TABLE}.cred_grade
+  searchable: false
+
+- name: credit_status
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: AC Credit Status
+  description: >-
+    Describes loan status (0=Performing; 1=Past
+    Due;2=Non-accrual;3=Renegotiated;4=Paid off;5=Collateral
+    repossessed;6=REO)
+  sql: ${TABLE}.cred_stat
+  searchable: false
+  synonyms:
+  - FICO, Credit Score, Credit Rating
+
+- name: collateral_type
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: The collateral type
+  sql: ${TABLE}.coll_type
+  searchable: false
+
+- name: coll_value
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Most recent appraisal value of the property
+  sql: ${TABLE}.coll_value
+  searchable: false
+
+- name: del_days
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of days for which the loan is currently delinquent
+  sql: ${TABLE}.del_days
+  searchable: false
+  synonyms:
+  - Days Delinquent, Delinquent
+
+- name: del_life
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of times delinquent during the life of the loan
+  sql: ${TABLE}.del_life
+  searchable: false
+
+- name: del_year
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of times delinquent during current year
+  sql: ${TABLE}.del_year
+  searchable: false
+
+- name: ltv
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  label: LTV
+  description: Current Book Balance / Current Collateral Value
+  sql: ${TABLE}.ltv
+  searchable: false
+
+- name: fundsbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Derived balance (based on rule-set) used for profit calculations
+  sql: ${TABLE}.fundsbal
+  searchable: false
+
+- name: fundsinc
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Annualized funds based income calculated for current period.
+  sql: ${TABLE}.fundsinc
+  searchable: false
+
+- name: basefees
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.basefees
+  searchable: false
+
+- name: transfees
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.transfees
+  searchable: false
+
+- name: loanfees
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Annualized loan fee income calculated for current period (origination
+    fees, commitment fees, late fees, overlimit fees)
+  sql: ${TABLE}.loanfees
+  searchable: false
+
+- name: miscfees
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Annualized other fee income calculated for current period (feescrtchk,
+    feesod, feesnsf,  feesret, feesforchk, feesstop, feeswire, feesoutatm,
+    feesforatm, feesmoney, feesoff, feesbranch, feespos)
+  sql: ${TABLE}.miscfees
+  searchable: false
+
+- name: alloc_nii
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Non-interest income allocated to account for current period.
+  sql: ${TABLE}.alloc_nii
+  searchable: false
+
+- name: total_nii
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: base fees + trans fees + loanfees + miscfees + allocated NII
+  sql: ${TABLE}.totnii
+  searchable: false
+
+- name: orig_exp
+  field_type: dimension
+  type: number
+  hidden: true
+  description: Annualized origination expense calculated for current period.
+  sql: ${TABLE}.orig_exp
+
+- name: mnt_exp
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.mnt_exp
+  searchable: false
+
+- name: transaction_expense
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: AC Transaction Expense
+  description: Annualized transaction activity expense calculated for current period.
+  sql: ${TABLE}.transexp
+  searchable: false
+
+- name: llp
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Annualized LLP expense calculated for current period.
+  sql: ${TABLE}.llp
+  searchable: false
+
+- name: fdicins
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Annualized deposit insurance charge for account
+  sql: ${TABLE}.fdicins
+  searchable: false
+
+- name: alloc_nie
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Non-interest expense allocated to account for current period.
+  sql: ${TABLE}.alloc_nie
+  searchable: false
+
+- name: total_nie
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: orig_exp + mnt_exp + transexp + alloc_nie + fdicins + llp
+  sql: ${TABLE}.totnie
+  searchable: false
+
+- name: capcost
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Charge based on capital allocated to the account.
+  sql: ${TABLE}.capcost
+  searchable: false
+
+- name: profit
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Account Profit
+  description: Annualized net account profit calculated for the current period.
+  sql: ${TABLE}.profit
+  searchable: false
+  synonyms:
+  - Account Profit, Deposit Profit, Loan profit, Profit amount
+
+- name: pprofit
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.pprofit
+
+- name: riskcap
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.riskcap
+  searchable: false
+
+- name: roa
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Return on asset
+  sql: ${TABLE}.roa
+  searchable: false
+
+- name: account_value
+  field_type: dimension
+  type: number
+  description: >-
+    Amount of value created or destroyed based on account ROE and
+    institution's required rate of return (from GLBLPROF)
+  sql: ${TABLE}.acctvalue
+
+- name: totnmtrn
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.totnmtrn
+  searchable: false
+
+- name: profcat
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Account Profit Cat
+  description: ''
+  sql: ${TABLE}.profcat
+  searchable: false
+  synonyms:
+  - Profit category, Profit group, Profit Segment
+
+- name: profpct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Overall account profitability percentile, 100 (highest) to 1 (lowest).
+  sql: ${TABLE}.profpct
+  searchable: false
+
+- name: pprofpct
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.pprofpct
+
+- name: profdec
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: AC Prof Dec
+  description: ''
+  sql: ${TABLE}.profdec
+  searchable: false
+
+- name: feessvc
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Total monthly service fees collected
+  sql: ${TABLE}.feessvc
+  searchable: false
+
+- name: feeschk
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Monthly fees collected for checks paid
+  sql: ${TABLE}.feeschk
+  searchable: false
+
+- name: feesatm
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Monthly ATM fees collected
+  sql: ${TABLE}.feesatm
+  searchable: false
+
+- name: feesach
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Monthly ACH fees collected
+  sql: ${TABLE}.feesach
+  searchable: false
+
+- name: feespos
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Monthly POS fees collected
+  sql: ${TABLE}.feespos
+  searchable: false
+
+- name: numchk
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Total number of checks paid during the month
+  sql: ${TABLE}.numchk
+  searchable: false
+
+- name: numinatm
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly bank ATM withdrawals
+  sql: ${TABLE}.numinatm
+  searchable: false
+
+- name: numoutatm
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly non-bank ATM withdrawals
+  sql: ${TABLE}.numoutatm
+  searchable: false
+
+- name: numforatm
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly international bank ATM withdrawals
+  sql: ${TABLE}.numforatm
+  searchable: false
+
+- name: numach
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    number of monthly automated clearing house debit transactions (used for
+    bill pay)
+  sql: ${TABLE}.numach
+  searchable: false
+
+- name: numpos
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly PIN POS debit transactions
+  sql: ${TABLE}.numpos
+  searchable: false
+
+- name: numsigpos
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly signature POS debit transactions
+  sql: ${TABLE}.numsigpos
+  searchable: false
+
+- name: numeld
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly electronic (direct) deposits
+  sql: ${TABLE}.numeld
+  searchable: false
+
+- name: numned
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly non-electronic (branch) deposits
+  sql: ${TABLE}.numned
+  searchable: false
+
+- name: numade
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numade
+  searchable: false
+
+- name: numatr
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly ATM transfers
+  sql: ${TABLE}.numatr
+  searchable: false
+
+- name: numdep
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of monthly deposited items
+  sql: ${TABLE}.numdep
+  searchable: false
+
+- name: numbillpay
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of bill pay transactions
+  sql: ${TABLE}.numbillpay
+  searchable: false
+
+- name: volpos
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Volume ($) of POS transactions; used with global commission rate to
+    estimate POS fee income
+  sql: ${TABLE}.volpos
+  searchable: false
+
+- name: volsigpos
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Volume ($) of signature POS transactions; used with global commission rate
+    to estimate POS fee income
+  sql: ${TABLE}.volsigpos
+  searchable: false
+
+- name: feeslate
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Late fees collected on loans; (finance charge on credit cards)
+  sql: ${TABLE}.feeslate
+  searchable: false
+
+- name: feesover
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Overlimit fees collected on loans & credit cards
+  sql: ${TABLE}.feesover
+  searchable: false
+
+- name: feescrtchk
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.feescrtchk
+  searchable: false
+
+- name: feesod
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Overdraft fees collected
+  sql: ${TABLE}.feesod
+  searchable: false
+
+- name: feesnsf
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees collected for unavailable funds
+  sql: ${TABLE}.feesnsf
+  searchable: false
+
+- name: feesret
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees collected for returned items
+  sql: ${TABLE}.feesret
+  searchable: false
+
+- name: feesforchk
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.feesforchk
+  searchable: false
+
+- name: feesstop
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees collected for stop payments
+  sql: ${TABLE}.feesstop
+  searchable: false
+
+- name: feeswire
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Wire transfer fees collected
+  sql: ${TABLE}.feeswire
+  searchable: false
+
+- name: feesoutatm
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees for out of network ATM withdrawals
+  sql: ${TABLE}.feesoutatm
+  searchable: false
+
+- name: feesforatm
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees for international ATM withdrawals
+  sql: ${TABLE}.feesforatm
+  searchable: false
+
+- name: feesmoney
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees collected for money orders
+  sql: ${TABLE}.feesmoney
+  searchable: false
+
+- name: feesoff
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Fees collected for cashier's checks
+  sql: ${TABLE}.feesoff
+  searchable: false
+
+- name: feesbranch
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Fees collected for in-branch items (statements, copy of check,
+    deposit,etc.)
+  sql: ${TABLE}.feesbranch
+  searchable: false
+
+- name: numcrtchk
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of certified checks issued
+  sql: ${TABLE}.numcrtchk
+  searchable: false
+
+- name: numod
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of overdraft items paid (or returned)
+  sql: ${TABLE}.numod
+  searchable: false
+
+- name: numnsf
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of items returned due to unavailable funds
+  sql: ${TABLE}.numnsf
+  searchable: false
+
+- name: numret
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of returned items
+  sql: ${TABLE}.numret
+  searchable: false
+
+- name: numforchk
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numforchk
+  searchable: false
+
+- name: numstop
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of stop payments processed
+  sql: ${TABLE}.numstop
+  searchable: false
+
+- name: numwire
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of wire transfers executed
+  sql: ${TABLE}.numwire
+  searchable: false
+
+- name: nummoney
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of money orders processed
+  sql: ${TABLE}.nummoney
+  searchable: false
+
+- name: numoff
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Number of official checks processed
+  sql: ${TABLE}.numoff
+  searchable: false
+
+- name: numtel
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of teller line checks cashed during the month
+  sql: ${TABLE}.numtel
+  searchable: false
+
+- name: numbranch
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: number of in-branch items processed
+  sql: ${TABLE}.numbranch
+  searchable: false
+
+- name: balance_tier
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Account Balance Tier
+  description: Balance tier code used for reporting and analysis
+  sql: ${TABLE}.baltier
+  searchable: false
+
+- name: risk_rating
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  label: Account Risk Rating
+  description: ''
+  sql: ${TABLE}.riskrating
+  searchable: true
+
+- name: islost
+  field_type: dimension
+  type: yesno
+  hidden: false
+  primary_key: false
+  label: Account IsLost
+  description: ''
+  sql: ${TABLE}.islost
+  searchable: false
+
+- name: profit_tier
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Account Profit Tier
+  description: profit category description
+  sql: >-
+    case when ${profcat} = 1 then '1-Platinum' when ${profcat} = 2 then
+    '2-Gold' when ${profcat} = 3 then '3-Silver' when ${profcat} = 4 then
+    '4-Bronze' else null end
+  searchable: true
+  synonyms:
+  - Profit category description, Profit Segment, profit tier
+
+- name: credit_grade_description
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Account Cred Grad Des
+  description: Borrower credit rating assigned by Bank on original application
+  sql: |
+    CASE 
+      WHEN ${credit_grade} BETWEEN 1 AND 579 THEN '(1-579)'
+      WHEN ${credit_grade} BETWEEN 580 AND 669 THEN '(580-669)'
+      WHEN ${credit_grade} BETWEEN 670 AND 739 THEN '(670-739)'
+      WHEN ${credit_grade} BETWEEN 740 AND 799 THEN '(740-799)'
+      WHEN ${credit_grade} BETWEEN 800 AND 850 THEN '(800-850)'
+      ELSE NULL 
+    END
+  searchable: true
+
+- name: Account_Age
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Account Age
+  description: Age of Account Based on Origination Date
+  sql: >-
+    CASE WHEN DATEDIFF(DAY, ${TABLE}.orig_date, GETDATE()) < 365 THEN 'Under 1
+    Year' WHEN DATEDIFF(DAY, ${TABLE}.orig_date, GETDATE()) BETWEEN 365 AND
+    (3*365 - 1) THEN '1 - 3 Years' WHEN DATEDIFF(DAY, ${TABLE}.orig_date,
+    GETDATE()) BETWEEN (3*365) AND (5*365 - 1) THEN '3 - 5 Years' WHEN
+    DATEDIFF(DAY, ${TABLE}.orig_date, GETDATE()) >= (5*365) THEN '5+ Years'
+    ELSE 'Unassigned' END
+  searchable: true
+  canon_date: account_profit.data_period
+
+- name: Account_Age_In_Days
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Account Age (Days)
+  description: Exact age of the account in days since origination date
+  sql: DATEDIFF(DAY, ${TABLE}.orig_date, GETDATE())
+  searchable: true
+  canon_date: account_profit.data_period
+
+- name: orig_date
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: false
+  label: Account Orig Date
+  description: ''
+  timeframes:
+  - raw
+  - date
+  - month
+  - year
+  sql: ${TABLE}.orig_date
+
+- name: mat_date
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: false
+  description: Maturity date
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.mat_date
+  synonyms:
+  - Maturity, Maturity Date, Loan End Date
+  zoe_description: Date that certificates and loans mature
+
+- name: close_date
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  description: ''
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - month
+  - month_of_year
+  - year
+  sql: ${TABLE}.close_date
+
+- name: lastactive
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.lastactive
+
+- name: last_rp_dt
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.last_rp_dt
+
+- name: nxt_rp_dt
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.nxt_rp_dt
+
+- name: coll_date
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  description: Date of most recent appraisal taken of the property
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.coll_date
+
+- name: data_period
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  description: >-
+    This is the period of the snapshot, and it is always the date of the end
+    of the month
+  timeframes:
+  - raw
+  - date
+  - month
+  - year
+  sql: ${TABLE}.DataPeriod
+  synonyms:
+  - account
+
+- name: createdon
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.CreatedOn
+
+- name: updatedon
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.UpdatedOn
+
+- name: filedate
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.FileDate
+
+- name: Account_Age_Days
+  field_type: measure
+  type: number
+  hidden: false
+  label: Account Age Days
+  description: Exact age of the account in days since origination
+  sql: DATEDIFF(DAY, ${TABLE}.orig_date, GETDATE())
+
+- name: total_account_age_days
+  field_type: measure
+  type: average
+  label: total account age
+  value_format_name: decimal_0
+  sql: ${Account_Age_Days}
+
+- name: Loan_Profit_Average
+  field_type: measure
+  type: number
+  label: Loan Profit Average
+  description: >-
+    The avg account loan profit (in usd). This is also known as avg loan
+    profitability.
+  value_format_name: usd
+  sql: ${account_profit.loan_profit}/${account_profit.total_months}
+  canon_date: account_profit.data_period
+
+- name: total_account_value
+  field_type: measure
+  type: sum
+  hidden: true
+  description: >-
+    Total amount of value created or destroyed based on account ROE and
+    institution's required rate of return (from GLBLPROF)
+  value_format_name: decimal_0
+  sql: ${account_value}
+
+- name: total_available_credit
+  field_type: measure
+  type: sum
+  hidden: true
+  description: >-
+    The Total amount of available credit remaining on the account (asset
+    accounts only)
+  value_format_name: decimal_0
+  sql: ${available_credit}
+
+- name: total_transaction_expense
+  field_type: measure
+  type: sum
+  hidden: true
+  description: >-
+    The total transaction expense (in usd). This is the cost of servicing
+    customer transactions.
+  value_format_name: decimal_0
+  sql: ${transaction_expense}
+
+- name: avg_account_ltv
+  field_type: measure
+  type: average
+  hidden: true
+  label: Avg Account LTV
+  description: >-
+    The average account LTV (Loan to value = current book balance / current
+    collateral value)
+  value_format_name: decimal_0
+  sql: ${ltv}
+
+- name: total_balance
+  field_type: measure
+  type: sum
+  label: Total Balance
+  description: the total account balance using CurBalance sum aggregation
+  value_format_name: usd
+  sql: case when ${islost}=0 then ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: total_loan_accounts
+  field_type: measure
+  type: count_distinct
+  label: Total Loan Accounts
+  description: Total unique number of loan accounts
+  value_format_name: decimal_0
+  sql: case when ${servgrp.bscategory}=2 AND ${islost}=0 then ${acctid} end
+  canon_date: data_period
+
+- name: loan_balance_previous
+  field_type: measure
+  type: sum
+  label: Total Loan Balance Previous
+  description: >-
+    the total loan account balance previous data period using CurBalance sum
+    aggregation with a filter for bscategory = 2
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${islost}=0 AND
+    ${data_period_date}='2024-11-30' then ${cur_bal} end 
+  canon_date: data_period
+
+- name: loan_growth
+  field_type: measure
+  type: number
+  label: Loan $ Growth
+  description: >-
+    difference between the total loan account balance previous data period and
+    present data period
+  value_format_name: usd
+  sql: >-
+    ${account_profit.loan_balance_present}-${account_profit.loan_balance_previous}
+  canon_date: data_period
+
+- name: total_months
+  field_type: measure
+  type: count_distinct
+  label: Total Months
+  description: total unique dataperiods
+  value_format_name: decimal_0
+  sql: ${data_period_date}
+  canon_date: data_period
+
+- name: loan_percent_growth
+  field_type: measure
+  type: number
+  label: Loan % Growth
+  description: percentage of loan growth
+  value_format_name: percent_2
+  sql: ${account_profit.loan_growth}/${account_profit.loan_balance_previous}
+  canon_date: account_profit.data_period
+
+- name: average_loan_accounts
+  field_type: measure
+  type: number
+  label: Average Loan Accounts
+  description: Average of total unique number of accounts
+  value_format_name: decimal_0
+  sql_distinct_key: acctid
+  sql: ${account_profit.TOTAL_LOAN_ACCOUNTS}/${account_profit.total_months}
+  canon_date: account_profit.data_period
+
+- name: loan_account_present
+  field_type: measure
+  type: count_distinct
+  label: Loan Accounts Present
+  description: Total unique number of loan accounts present
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${islost}=0 AND
+    ${data_period_date}='2024-12-31' then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: loan_balance_average
+  field_type: measure
+  type: number
+  label: Loan Balance Average
+  description: >-
+    the average loan account balance using CurBalance average with a filter
+    for bscategory = 2
+  value_format_name: usd
+  sql: ${account_profit.total_loan_balance}/${account_profit.total_months}
+  canon_date: account_profit.data_period
+
+- name: loan_balance_present
+  field_type: measure
+  type: sum
+  label: Total Loan Balance Present
+  description: >-
+    the total loan account balancepresent data period using CurBalance sum
+    aggregation with a filter for bscategory = 2
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${islost}=0 AND
+    ${data_period_date}='2024-12-31' then ${cur_bal} end 
+  canon_date: account_profit.data_period
+
+- name: total_months_number
+  field_type: measure
+  type: count_distinct
+  label: Total Months Number
+  description: total unique dataperiods
+  value_format_name: decimal_0
+  sql: ${TABLE}.DataPeriod
+  canon_date: account_profit.data_period
+
+- name: loan_account_growth
+  field_type: measure
+  type: number
+  label: 'Loan # Growth'
+  description: >-
+    previous data periods and present dataperiod difference and present data
+    period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.loan_account_present}-${account_profit.loan_account_previous}
+  canon_date: account_profit.data_period
+
+- name: loan_account_pre
+  field_type: measure
+  type: number
+  hidden: false
+  label: Loan Accounts Previoustest
+  description: number of loan accounts previous
+  value_format_name: decimal_0
+  sql: ${account_profit.LOAN_ACCOUNT_PREVIOUS}
+  canon_date: account_profit.data_period
+
+- name: loan_balance_rolling
+  field_type: measure
+  type: sum
+  hidden: false
+  label: Total Loan Balance Rolling
+  description: >-
+    the total loan account balance using CurBalance sum aggregation with a
+    filter for bscategory = 2 for latest 60 days from the current date
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${islost}=0 AND
+    ${data_period_date}>=DATEADD(DAY,-90, GETDATE()) then ${cur_bal} end 
+  canon_date: account_profit.data_period
+
+- name: loan_balance_prior
+  field_type: measure
+  type: sum
+  label: Total Loan Balance Prior
+  description: >-
+    the total loan account balance using CurBalance sum aggregation with a
+    filter for bscategory = 2 for latest 60 days from the current date
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${data_period_date} >=
+    DATEADD(DAY,-180, GETDATE()) AND ${data_period_date} < DATEADD(DAY, -90,
+    GETDATE()) then ${cur_bal} end 
+  canon_date: account_profit.data_period
+
+- name: loan_growth_sixty_days
+  field_type: measure
+  type: number
+  label: Loan ($) Growth 90 Days
+  description: >-
+    difference between the total loan account balance previous90 and present
+    90
+  value_format_name: usd
+  sql: >-
+    ${account_profit.loan_balance_rolling}-${account_profit.loan_balance_prior}
+  canon_date: account_profit.data_period
+
+- name: loan_percent_growth_sixty
+  field_type: measure
+  type: number
+  label: Loan % Growth 90
+  description: percentage of loan growth
+  value_format_name: percent_2
+  sql: >-
+    ${account_profit.loan_growth_sixty_days}/${account_profit.loan_balance_prior}
+  canon_date: account_profit.data_period
+
+- name: loan_account_previous
+  field_type: measure
+  type: count_distinct
+  label: Loan Accounts Previous
+  description: Total unique number of loan accounts previous
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${islost}=0 AND
+    ${data_period_date}='2024-11-30' then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: loan_growth_percent
+  field_type: measure
+  type: number
+  label: Loan Growth Percent
+  description: percentage of loan account growth
+  value_format_name: percent_2
+  sql: >-
+    1.0*${account_profit.loan_account_growth}/${account_profit.loan_account_previous}
+  canon_date: account_profit.data_period
+
+- name: loan_profitability
+  field_type: measure
+  type: sum
+  label: Total Loan Profitability
+  description: Loan profitability is the sum of profit for service group two
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 and ${islost}=0 then
+    ${account_profit.profit} end
+  canon_date: account_profit.data_period
+
+- name: new_loan_accounts
+  field_type: measure
+  type: count_distinct
+  label: Total New Loan Accounts
+  description: Total unique number of new loan accounts
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${islost}=0 AND  ${accounts.status}=2 then
+    ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: new_loan_profitability
+  field_type: measure
+  type: sum
+  label: New Loan Profitability
+  description: >-
+    New Loan profitability is the sum of new loan account profit for service
+    group two
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 and ${islost}=0 AND  ${accounts.status}=2 then
+    ${account_profit.profit} end
+  canon_date: account_profit.data_period
+
+- name: deposit_balance_average
+  field_type: measure
+  type: number
+  label: Deposit Balance Average
+  description: >-
+    the average deposit account balance using CurBalance average with a filter
+    for bscategory = 1
+  value_format_name: usd
+  sql: ${account_profit.total_deposit_balance}/${account_profit.total_months}
+  canon_date: account_profit.data_period
+
+- name: deposit_balance_present
+  field_type: measure
+  type: sum
+  label: Total Deposit Balance Present
+  description: >-
+    the total deposit account balancepresent data period using CurBalance sum
+    aggregation with a filter for bscategory = 1
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${islost}=0 AND
+    ${data_period_date}='2024-12-31' then ${cur_bal} end 
+  canon_date: account_profit.data_period
+
+- name: deposit_balance_previous
+  field_type: measure
+  type: sum
+  label: Total Deposit Balance Previous
+  description: >-
+    the total deposit account balance previous data period using CurBalance
+    sum aggregation with a filter for bscategory = 1
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${islost}=0 AND
+    ${data_period_date}='2024-11-30' then ${cur_bal} end 
+  canon_date: account_profit.data_period
+
+- name: deposit_growth
+  field_type: measure
+  type: number
+  label: Deposit $ Growth
+  description: >-
+    difference between the total deposit account balance previous data period
+    and present data period
+  value_format_name: usd
+  sql: >-
+    ${account_profit.DEPOSIT_BALANCE_PRESENT}-${account_profit.DEPOSIT_BALANCE_PREVIOUS}
+  canon_date: account_profit.data_period
+
+- name: deposit_percent_growth
+  field_type: measure
+  type: number
+  label: Deposit % Growth
+  description: percentage of deposit growth
+  value_format_name: percent_2
+  sql: >-
+    ${account_profit.deposit_growth}/${account_profit.deposit_balance_previous}
+  canon_date: account_profit.data_period
+
+- name: deposit_accounts_previous
+  field_type: measure
+  type: count_distinct
+  label: Deposit Accounts Previous
+  description: Total unique number of Deposit accounts previous
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${islost}=0 AND
+    ${data_period_date}='2024-11-30' then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: deposit_accounts_present
+  field_type: measure
+  type: count_distinct
+  label: Deposit Accounts Present
+  description: Total unique number of deposit accounts present
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${islost}=0 AND
+    ${data_period_date}='2024-12-31' then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: deposit_account_growth
+  field_type: measure
+  type: number
+  label: 'Deposit # Growth'
+  description: >-
+    previous data periods and present dataperiod difference and present data
+    period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.deposit_accounts_present}-${account_profit.deposit_accounts_previous}
+  canon_date: account_profit.data_period
+
+- name: deposit_growth_percent
+  field_type: measure
+  type: number
+  label: Deposit Growth Percent
+  description: percentage of deposit account growth
+  value_format_name: percent_2
+  sql: >-
+    1.0*${account_profit.deposit_account_growth}/${account_profit.deposit_accounts_previous}
+  canon_date: account_profit.data_period
+
+- name: total_loan_balance
+  field_type: measure
+  type: sum
+  label: Total Loan Balances
+  description: >-
+    the total loan account balance using CurBalance sum aggregation with a
+    filter for bscategory = 2
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${accounts.islost}=0 AND ${islost}=0
+    then ${cur_bal} end 
+  canon_date: account_profit.data_period
+
+- name: total_deposit_balance
+  field_type: measure
+  type: sum
+  label: Total Deposit Balance
+  description: >-
+    the total deposit account balance using CurBalance sum aggregation with a
+    filter for bscategory = 1
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${accounts.islost}=0 then ${cur_bal}
+    end
+  canon_date: account_profit.data_period
+
+- name: total_new_deposit_balance
+  field_type: measure
+  type: sum
+  label: Total New Deposit Balance
+  description: >-
+    the total new deposit account balance using CurBalance sum aggregation
+    with a filter for bscategory = 1
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${accounts.status}= 2 AND
+    ${accounts.islost}=0 then ${cur_bal} end
+  canon_date: account_profit.data_period
+
+- name: total_new_loan_balance
+  field_type: measure
+  type: sum
+  label: Total New Loan Balance
+  description: >-
+    the total new loan account balance using CurBalance sum aggregation with a
+    filter for bscategory = 2
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${accounts.status}= 2 AND
+    ${accounts.islost}=0 then ${cur_bal} end
+  canon_date: account_profit.data_period
+
+- name: Average_Balance_New_Deposit_Account
+  field_type: measure
+  type: number
+  label: Average Balance New Deposit Account
+  description: >-
+    The avg account loan profit (in usd). This is also known as avg loan
+    profitability.
+  value_format_name: usd
+  sql: >-
+    CAST(${account_profit.total_new_deposit_balance} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.New_Deposit_Accounts} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Average_Balance_New_Loan_Account
+  field_type: measure
+  type: number
+  label: Average Balance New Loan Account
+  description: >-
+    The avg account loan profit (in usd). This is also known as avg loan
+    profitability.
+  value_format_name: usd
+  sql: >-
+    CAST(${account_profit.total_new_loan_balance} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.New_Loan_Accounts} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: total_accounts
+  field_type: measure
+  type: count_distinct
+  label: Total Accounts
+  description: Total unique number of accounts
+  value_format_name: decimal_0
+  sql: case when ${islost}=0 then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: total_account_profit
+  field_type: measure
+  type: sum
+  label: Total Account Profit
+  description: The total account profit (in usd). This is also known as profitability.
+  value_format_name: usd
+  sql: case when ${islost}=0 then ${profit} END
+  canon_date: account_profit.data_period
+
+- name: overall_profit_average
+  field_type: measure
+  type: number
+  label: Overall Profit Average
+  description: The avg account profit (in usd). This is also known as avg profitability.
+  value_format_name: usd
+  sql: ${account_profit.total_account_profit}/${account_profit.total_months}
+  canon_date: account_profit.data_period
+
+- name: deposit_profit
+  field_type: measure
+  type: sum
+  label: Deposit Profit
+  description: >-
+    The deposit account profit (in usd). This is also known asdeposit  profitability.
+  value_format_name: usd
+  sql: case when ${islost}=0 AND ${servgrp.BSCATEGORY}=1 then ${profit} END
+  canon_date: account_profit.data_period
+
+- name: loan_profit
+  field_type: measure
+  type: sum
+  label: Loan Profit
+  description: >-
+    The loan account profit (in usd). This is also known as loan  profitability.
+  value_format_name: usd
+  sql: case when ${islost}=0 AND ${servgrp.bscategory}=2 then ${profit} END
+  canon_date: account_profit.data_period
+
+- name: Deposit_Profit_Average
+  field_type: measure
+  type: number
+  label: Deposit Profit Average
+  description: >-
+    The avg account deposit profit (in usd). This is also known as avg deposit
+    profitability.
+  value_format_name: usd
+  sql: ${account_profit.deposit_profit}/${account_profit.total_months}
+  canon_date: account_profit.data_period
+
+- name: Avg_Loan_Accounts
+  field_type: measure
+  type: number
+  label: Avg Loan Accounts
+  description: Average of total unique number of accounts
+  value_format_name: decimal_0
+  sql: ${account_profit.total_loan_accounts}/${account_profit.total_months}
+
+- name: Deposit_Accounts
+  field_type: measure
+  type: count_distinct
+  label: Total Deposit Accounts
+  description: Total unique number of accounts
+  value_format_name: decimal_0
+  sql: case when ${servgrp.bscategory}=1 AND ${islost}=0 then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: New_Deposit_Accounts
+  field_type: measure
+  type: count_distinct
+  label: Total New Deposit Accounts
+  description: Total unique number of new deposit accounts
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${islost}=0 AND ${accounts.status}=
+    2 then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: New_Deposit_Account_Per_Member
+  field_type: measure
+  type: number
+  label: New Deposit Account Per Member
+  description: >-
+    The avg account loan profit (in usd). This is also known as avg loan
+    profitability.
+  value_format_name: decimal_4
+  sql: >-
+    CAST(${account_profit.New_Deposit_Accounts} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${customers.number_of_members} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: New_Loan_Account_Per_Member
+  field_type: measure
+  type: number
+  label: New Loan Account Per Member
+  description: The account loan (in usd). This is also known as avg loan profitability.
+  value_format_name: decimal_4
+  sql: >-
+    CAST(${account_profit.New_Loan_Accounts} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${customers.number_of_members} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Loan_Accounts
+  field_type: measure
+  type: count_distinct
+  label: Total Loan Accounts
+  description: Total unique number of accounts
+  value_format_name: decimal_0
+  sql: case when ${servgrp.bscategory}=2 AND ${islost}=0 then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: Lost_Accounts
+  field_type: measure
+  type: count_distinct
+  label: Lost Accounts
+  description: Total unique number of lost accounts
+  value_format_name: decimal_0
+  sql: case when ${accounts.status}= 3 then ${acctid} end
+  canon_date: account_profit.data_period
+
+- name: Lost_Balance
+  field_type: measure
+  type: sum
+  label: Lost Balance
+  description: the total lost account balance using CurBalance sum aggregation
+  value_format_name: usd_2
+  sql: case when ${accounts.status}=3 then ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Lost_Deposit_Accounts
+  field_type: measure
+  type: count_distinct
+  label: Lost Deposit Accounts
+  description: Total unique number of lost accounts
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${accounts.status}= 3 then ${acctid}
+    end
+  canon_date: account_profit.data_period
+
+- name: Lost_Loan_Accounts
+  field_type: measure
+  type: count_distinct
+  label: Lost Loan Accounts
+  description: Total unique number of lost accounts
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${accounts.status}= 3 then ${acctid}
+    end
+  canon_date: account_profit.data_period
+
+- name: Lost_Deposit_Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: Lost Deposit Accounts Latest
+  description: Total unique number of lost deposit accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND COALESCE(${islost}, 0) = 1 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: Lost_Deposit_Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: Lost Deposit Accounts Prior
+  description: Total lost unique number of lost deposit accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND COALESCE(${islost}, 0) = 1 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: lost_deposit_account_difference
+  field_type: measure
+  type: number
+  label: Lost Deposit Accounts Difference
+  description: >-
+    difference between the total deposit accounts prior data period and latest
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.Lost_Deposit_Account_Latest}-${account_profit.Lost_Deposit_Account_Prior}
+  canon_date: data_period
+
+- name: Lost_Deposit_Account_Percent_Change
+  field_type: measure
+  type: number
+  label: Lost Deposit Account % Change
+  description: percentage of deposit change
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.lost_deposit_account_difference} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Lost_Deposit_Account_Prior} AS
+    DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Lost_Loan_Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: Lost loan Accounts Latest
+  description: Total unique number of lost loan accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND COALESCE(${islost}, 0) = 1 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: Lost_Loan_Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: Lost Loan Accounts Prior
+  description: Total lost unique number of lost loan accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND COALESCE(${islost}, 0) = 1 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: lost_loan_account_difference
+  field_type: measure
+  type: number
+  label: Lost Loan Accounts Difference
+  description: >-
+    difference between the total loan accounts prior data period and latest
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.Lost_Loan_Account_Latest}-${account_profit.Lost_Loan_Account_Prior}
+  canon_date: data_period
+
+- name: Lost_Loan_Account_Percent_Change
+  field_type: measure
+  type: number
+  label: Lost Loan Account % Change
+  description: percentage of loan change
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.lost_loan_account_difference} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Lost_loan_Account_Prior} AS DECIMAL(38,6)),
+    0)
+  canon_date: account_profit.data_period
+
+- name: new_deposit_accounts_by_new_members
+  field_type: measure
+  type: count_distinct
+  label: New Deposit Accounts By New Members
+  description: Unique ID for each account record
+  sql: >-
+    CASE WHEN ${accounts.status} = 2 AND ${customers.status} = 2 AND
+    ${servgrp.bscategory} = 1 THEN ${account_profit.acctid} END
+  canon_date: account_profit.data_period
+
+- name: new_deposit_accounts_by_all_members
+  field_type: measure
+  type: count_distinct
+  label: New Deposit Accounts By New Members
+  description: Unique ID for each account record
+  sql: >-
+    CASE WHEN ${accounts.status} = 2  AND ${servgrp.bscategory} = 1 THEN
+    ${account_profit.acctid} END
+  canon_date: account_profit.data_period
+
+- name: Percent_of_new_deposit_accounts_by_new_members
+  field_type: measure
+  type: number
+  label: New Account Open % By New Members
+  description: percentage of deposit change
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.new_deposit_accounts_by_new_members} AS
+    DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.new_deposit_accounts_by_all_members} AS
+    DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: new_loan_accounts_by_new_members
+  field_type: measure
+  type: count_distinct
+  label: New Loan Accounts By New Members
+  description: Unique ID for each account record
+  sql: >-
+    CASE WHEN ${accounts.status} = 2 AND ${customers.status} = 2 AND
+    ${servgrp.bscategory} = 2 THEN ${account_profit.acctid} END
+  canon_date: account_profit.data_period
+
+- name: new_loan_accounts_by_all_members
+  field_type: measure
+  type: count_distinct
+  label: New Loan Accounts By New Members
+  description: Unique ID for each account record
+  sql: >-
+    CASE WHEN ${accounts.status} = 2  AND ${servgrp.bscategory} = 2 THEN
+    ${account_profit.acctid} END
+  canon_date: account_profit.data_period
+
+- name: percent_of_new_loan_accounts_by_new_members
+  field_type: measure
+  type: number
+  label: New Loan Accounts Open % By New Members
+  description: percentage of loan change
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.new_loan_accounts_by_new_members} AS DECIMAL(38,6))
+    / NULLIF(CAST(${account_profit.new_loan_accounts_by_all_members} AS
+    DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Deposit_Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: Deposit Accounts Latest
+  description: Total unique number of deposit accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND COALESCE(${islost}, 0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: Deposit_Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: Deposit Accounts Prior
+  description: Total lost unique number of deposit accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND COALESCE(${islost}, 0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: deposit_account_difference
+  field_type: measure
+  type: number
+  label: Deposit Accounts Difference
+  description: >-
+    difference between the total deposit accounts prior data period and latest
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.Deposit_Account_Latest}-${account_profit.Deposit_Account_Prior}
+  canon_date: data_period
+
+- name: Deposit_Account_Percent_Change
+  field_type: measure
+  type: number
+  label: Deposit Account % Change
+  description: percentage of deposit change
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.deposit_account_difference} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Deposit_Account_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: total_deposit_balance_under_1_year
+  field_type: measure
+  type: sum
+  label: Total Deposit Balance Under 1 Year Account Age
+  description: >-
+    the total deposit account balance using CurBalance sum aggregation with a
+    filter for bscategory = 1
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${accounts.islost}=0 AND
+    ${account_profit.Account_Age}='Under 1 Year' then ${cur_bal} end
+  canon_date: account_profit.data_period
+
+- name: percent_total_deposit_balance_under_1_year
+  field_type: measure
+  type: number
+  label: Percent of Total Deposit Balance Under 1 Year Account Age
+  description: >-
+    the total deposit account balance using CurBalance sum aggregation with a
+    filter for bscategory = 1
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.total_deposit_balance_under_1_year} AS
+    DECIMAL(38,6)) / NULLIF(CAST(${account_profit.total_deposit_balance} AS
+    DECIMAL(38,6)), 0)
+
+- name: Deposit_Profit_Balance_Per_Account
+  field_type: measure
+  type: number
+  label: Deposit Profit Balance Per Account
+  description: ''
+  value_format_name: usd_2
+  sql: >-
+    ${account_profit.deposit_profit}/${average_account_deposit_derived.total_distinct_deposit_accounts}
+  canon_date: account_profit.data_period
+
+- name: total_loan_balance_under_1_year
+  field_type: measure
+  type: sum
+  label: Total Loan Balance Under 1 Year Account Age
+  description: >-
+    the total Loan account balance using CurBalance sum aggregation with a
+    filter for bscategory = 2
+  value_format_name: usd
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${accounts.islost}=0 AND
+    ${account_profit.Account_Age}='Under 1 Year' then ${cur_bal} end
+  canon_date: account_profit.data_period
+
+- name: percent_total_loan_balance_under_1_year
+  field_type: measure
+  type: number
+  label: Percent of Total loan Balance Under 1 Year Account Age
+  description: >-
+    the total loan account balance using CurBalance sum aggregation with a
+    filter for bscategory = 2
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.total_loan_balance_under_1_year} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.total_loan_balance} AS DECIMAL(38,6)), 0)
+
+- name: Loan_Profit_Balance_Per_Account
+  field_type: measure
+  type: number
+  label: Loan Profit Balance Per Account
+  description: ''
+  value_format_name: usd_2
+  sql: >-
+    ${account_profit.loan_profit}/${average_account_loan_derived.total_distinct_loan_accounts}
+  canon_date: account_profit.data_period
+
+- name: Loan_Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: Loan Accounts Latest
+  description: Total unique number of loan accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND COALESCE(${islost}, 0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -3) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: Loan_Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: Loan Accounts Prior
+  description: Total lost unique number of loan accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND COALESCE(${islost}, 0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: loan_account_difference
+  field_type: measure
+  type: number
+  label: Loan Accounts Difference
+  description: >-
+    difference between the total loan accounts prior data period and latest
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.Deposit_Account_Latest}-${account_profit.Deposit_Account_Prior}
+  canon_date: data_period
+
+- name: Loan_Account_Percent_Change
+  field_type: measure
+  type: number
+  label: Loan Account % Change
+  description: percentage of loan change
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.loan_account_difference} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Loan_Account_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Deposit_Balance_Average_Derived
+  field_type: measure
+  type: number
+  label: Deposit Balance Average Derived
+  description: The avg account deposit  profitability.
+  value_format_name: usd
+  sql: >-
+    ${account_profit.total_deposit_balance}/${average_account_deposit_derived.total_distinct_deposit_accounts}
+  canon_date: account_profit.data_period
+
+- name: Loan_Balance_Average_Derived
+  field_type: measure
+  type: number
+  label: Loan Balance Average Derived
+  description: >-
+    The avg account loan  (in usd). This is also known as avg loan
+    profitability.
+  value_format_name: usd
+  sql: >-
+    ${account_profit.total_loan_balance}/${average_account_loan_derived.total_distinct_loan_accounts}
+  canon_date: account_profit.data_period
+
+- name: Total_New_Accounts_Deposit_Balance
+  field_type: measure
+  type: sum
+  label: Total New Accounts Deposit Balance
+  description: Total New Accounts Deposit Balance
+  value_format_name: usd
+
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${accounts.status} = 2 AND
+    ${accounts.islost}=0 AND ${customers.islost}=0 then ${cur_bal} end
+  canon_date: account_profit.data_period
+- name: Total_New_Accounts_Loan_Balance
+  field_type: measure
+  type: sum
+  label: Total New Accounts Loan Balance
+  description: Total New Accounts Loan Balance
+  value_format_name: usd
+
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${accounts.status} = 2 AND
+    ${accounts.islost}=0 AND ${customers.islost}=0 then ${cur_bal} end
+  canon_date: account_profit.data_period
+- name: number_of_profitable_accounts
+  field_type: measure
+  type: count_distinct
+  label: Number Of Profitable Accounts
+  description: >-
+    This is the number of accounts that are profitable.
+  value_format_name: decimal_0
+  sql: >-
+    case when ${islost}=0 AND ${account_profit.profcat}=1 then ${acctid} end
+  synonyms:
+  - profitable accounts
+  canon_date: account_profit.data_period
+
+- name: Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: Accounts Latest
+  description: Total unique number of accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date) = EOMONTH(GETDATE(),
+    -3) THEN ${acctid} END
+  canon_date: account_profit.data_period
+
+- name: Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: Accounts Prior
+  description: Total unique number of accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date) = EOMONTH(GETDATE(),
+    -10) THEN ${acctid} END
+  canon_date: account_profit.data_period
+
+- name: Net_Account_Growth
+  field_type: measure
+  type: number
+  label: Net Account Growth
+  description: >-
+    difference between the total  accounts prior data period and latest ${cur_bal}
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.Account_Latest}-${account_profit.Account_Prior}
+  canon_date: data_period
+
+
+- name: Balance_Latest
+  field_type: measure
+  type: sum
+  label: Balance Latest
+  description: Total Balance Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date) = EOMONTH(GETDATE(),
+    -4) THEN ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Balance_Prior
+  field_type: measure
+  type: sum
+  label: Balance Prior
+  description: Total Balances prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date) = EOMONTH(GETDATE(),
+    -10) THEN ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Net_Balance_Growth
+  field_type: measure
+  type: number
+  label: Net Balance Growth
+  description: >-
+    difference between the total Balance prior data period and latest
+    data period
+  value_format_name: usd
+  sql: >-
+    ${account_profit.Balance_Latest}-${account_profit.Balance_Prior}
+  canon_date: data_period
+
+- name: Percent_Change_Balance_Growth
+  field_type: measure
+  type: number
+  label: Percent Change Balance Growth
+  description: percentage Change of Balance Growth
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.Net_Balance_Growth} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Balance_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+
+- name: Account_Age_Avg
+  field_type: measure
+  type: average
+  hidden: false
+  label: Avg Account Age (Days)
+  description: Avg age of the account in days since origination date
+  sql: ${account_profit.Account_Age_In_Days}
+  canon_date: account_profit.data_period
+
+- name: New_Deposit_Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: New Deposit Accounts Latest
+  description: Total new unique number of deposit accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND ${accounts.status}=2 AND COALESCE(${islost},
+    0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: New_Deposit_Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: New Deposit Accounts Prior
+  description: Total new unique number of deposit accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND ${accounts.status}=2 AND COALESCE(${islost},
+    0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: New_deposit_account_difference
+  field_type: measure
+  type: number
+  label: New Deposit Accounts Difference
+  description: >-
+    difference between the total new deposit accounts prior data period and latest
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.New_Deposit_Account_Latest}-${account_profit.New_Deposit_Account_Prior}
+  canon_date: data_period
+
+- name: New_Deposit_Account_Percent_Change
+  field_type: measure
+  type: number
+  label: New Deposit Account % Change
+  description: percentage of new deposit account
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.New_Deposit_Account_Difference} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.New_Deposit_Account_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: New_Loan_Account_Latest
+  field_type: measure
+  type: count_distinct
+  label: New Loan Accounts Latest
+  description: Total new unique number of Loan accounts Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND ${accounts.status}=2 AND COALESCE(${islost},
+    0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: New_Loan_Account_Prior
+  field_type: measure
+  type: count_distinct
+  label: New Loan Accounts Prior
+  description: Total new unique number of Loan accounts prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND ${accounts.status}=2 AND COALESCE(${islost},
+    0) = 0 AND
+    CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${acctid}
+    END
+  canon_date: account_profit.data_period
+
+- name: New_Loan_Account_Difference
+  field_type: measure
+  type: number
+  label: New Loan Accounts Difference
+  description: >-
+    difference between the total new loan accounts prior data period and latest
+    data period
+  value_format_name: decimal_0
+  sql: >-
+    ${account_profit.New_Loan_Account_Latest}-${account_profit.New_Loan_Account_Prior}
+  canon_date: data_period
+
+- name: New_Loan_Account_Percent_Change
+  field_type: measure
+  type: number
+  label: New Loan Account % Change
+  description: percentage of new loan account
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.New_Loan_Account_Difference} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.New_Loan_Account_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Avg_Profit
+  field_type: measure
+  type: average
+  hidden: false
+  label: Avg. Account Profit
+  description: Annualized net account profit calculated for the current period.
+  value_format_name: usd
+  sql: ${TABLE}.profit
+
+- name: Deposit_Balance_Latest
+  field_type: measure
+  type: sum
+  label: Deposit Balance Latest
+  description: Total Deposit Balance Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND COALESCE(${islost}, 0) = 0 AND CAST(${data_period_date}
+    AS date) = EOMONTH(GETDATE(), -4) THEN ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Deposit_Balance_Prior
+  field_type: measure
+  type: sum
+  label: Deposit Balance Prior
+  description: Total Deposit Balances prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 1 AND COALESCE(${islost}, 0) = 0 AND CAST(${data_period_date}
+    AS date) = EOMONTH(GETDATE(), -10) THEN ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Net_Deposit_Balance_Growth
+  field_type: measure
+  type: number
+  label: Net Deposit Balance Growth
+  description: >-
+    difference between the total Deposit Balance prior data period and latest
+    data period
+  value_format_name: usd
+  sql: >-
+    ${account_profit.Deposit_Balance_Latest}-${account_profit.Deposit_Balance_Prior}
+  canon_date: data_period
+
+- name: Percent_Change_Deposit_Balance_Growth
+  field_type: measure
+  type: number
+  label: Percent Change Deposit Balance Growth
+  description: percentage Change of Deposit Balance Growth
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.Net_Deposit_Balance_Growth} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Deposit_Balance_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: Loan_Balances_Latest
+  field_type: measure
+  type: sum
+  label: Loan Balances Latest
+  description: Total Loan Balance Latest Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND COALESCE(${islost}, 0) = 0 AND CAST(${data_period_date}
+    AS date) = EOMONTH(GETDATE(), -4) THEN ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Loan_Balances_Prior
+  field_type: measure
+  type: sum
+  label: Loan Balances Prior
+  description: Total Loan Balances prior Completed Month
+  value_format_name: decimal_0
+  sql: >-
+    CASE WHEN ${servgrp.bscategory} = 2 AND COALESCE(${islost}, 0) = 0 AND CAST(${data_period_date}
+    AS date) = EOMONTH(GETDATE(), -10) THEN ${cur_bal} END
+  canon_date: account_profit.data_period
+
+- name: Net_Loan_Balances_Growth
+  field_type: measure
+  type: number
+  label: Net Loan Balances Growth
+  description: >-
+    difference between the total Loan Balance prior data period and latest
+    data period
+  value_format_name: usd
+  sql: >-
+    ${account_profit.Loan_Balances_Latest}-${account_profit.Loan_Balances_Prior}
+  canon_date: data_period
+
+- name: Percent_Change_Loan_Balance_Growth
+  field_type: measure
+  type: number
+  label: Percent Change Loan Balance Growth
+  description: percentage Change of Loan Balance Growth
+  value_format_name: percent_2
+  sql: >-
+    CAST(${account_profit.Net_Loan_Balances_Growth} AS DECIMAL(38,6)) /
+    NULLIF(CAST(${account_profit.Loan_Balances_Prior} AS DECIMAL(38,6)), 0)
+  canon_date: account_profit.data_period
+
+- name: avg_accounts_per_member
+  field_type: measure
+  type: number
+  label: Average Account Per Member
+  value_format_name: decimal_2
+  sql: CAST(${total_accounts} AS DECIMAL(38,6)) / NULLIF(CAST(${customers.number_of_members} AS DECIMAL(38,6)), 0)

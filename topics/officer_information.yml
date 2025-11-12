@@ -1,0 +1,18 @@
+type: topic
+base_view: officers
+model_name: strum_platform_model
+label: Officer Information
+description: >-
+  The 'Officer Information' data model captures details about officers in an
+  organization. It includes the unique identifier for each officer (OFFICER_ID),
+  the department they belong to (DEPT_ID), their official full name (OFFL_NAME),
+  and their official short or given name (OFFS_NAME). This model helps in
+  organizing officer details, facilitating easy lookup and management within the
+  organization's records.
+zoe_description: >-
+  The 'Officer Information' topic provides details about officers, including
+  unique officer IDs, department associations, and names. Use OFFICER_ID to
+  identify officers uniquely, DEPT_ID to see associated departments, and
+  OFFL_NAME and OFFS_NAME for official naming conventions.
+hidden: false
+views: {}

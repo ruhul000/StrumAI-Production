@@ -1,0 +1,12 @@
+type: topic
+base_view: transactions
+model_name: strum_platform_model
+label: Transaction Information
+description: >-
+  The 'Transaction Information' data model captures details about organization's
+  transaction records.
+zoe_description: >-
+  The 'Transaction Information' topic provides details about transaction
+  including transaction number and other information.
+hidden: false
+views: {}

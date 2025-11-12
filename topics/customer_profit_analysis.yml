@@ -1,0 +1,88 @@
+type: topic
+base_view: customer_profit
+model_name: strum_platform_model
+label: Customer Profit Analysis
+description: >-
+  This model focuses on analyzing customer profitability metrics on a monthly
+  basis. Key fields include CUSTID for customer identification, PROFIT for
+  profitability measures, and SERVICE_PENETRATION_TIER for service usage levels.
+  Users should filter data using data_period_date to examine specific months
+  accurately. The insights help in understanding customer profitability, service
+  usage, and risk assessment, aiding in strategic decision-making.
+zoe_description: >-
+  Analyze monthly customer profitability metrics. Filter by data_period_date for
+  specific months. Key fields are CUSTID (customer ID), PROFIT (profit
+  measures), and SERVICE_PENETRATION_TIER (service usage level). Use for
+  understanding profitability and customer engagement.
+hidden: false
+views:
+  customer_profit:
+    join:
+      join_type: left_outer
+      relationship: one_to_one
+      sql_on: >-
+        concat(${customer_profit.custid},
+        ${customer_profit.data_period_raw})=concat(${customers.custid},
+        ${customers.data_period_raw})
+  lifestyle:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${customers.lifestyle}=${lifestyle.code}
+  nbcs_pred:
+    join:
+      join_type: left_outer
+      relationship: one_to_one
+      sql_on: >-
+        concat(${customer_profit.custid},
+        ${customer_profit.data_period_raw})=concat(${nbcs_pred.custid},
+        ${nbcs_pred.data_period_raw})
+  average_customer_derived:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: >-
+        ${average_customer_derived.data_period_raw} =
+        ${customers.data_period_raw}
+
+  churn_member_rate_view:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: ${churn_member_rate_view.data_period_raw} = ${customers.data_period_raw}
+
+  churn_branch_member_rate_view:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: ${churn_branch_member_rate_view.data_period_raw} = ${customers.data_period_raw}
+
+  accounts:
+    join:
+      join_type: left_outer
+      relationship: one_to_many
+      sql_on: >-
+        concat(${customer_profit.custid},
+        ${customer_profit.data_period_raw})=concat(${accounts.custid},
+        ${accounts.data_period_raw})
+  branch:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${customers.branchid},${customers.data_period_raw})
+        =concat(${branch.branchid},${branch.data_period_raw})
+  customers:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${accounts.custid},
+        ${accounts.data_period_raw})=concat(${customers.custid},${customers.data_period_raw})
+
+  udfrecords_member:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${customers.custid},${customers.data_period_raw})=concat(${udfrecords_member.custid},${udfrecords_member.data_period_raw})

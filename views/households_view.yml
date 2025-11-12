@@ -1,0 +1,1266 @@
+version: 1
+type: view
+name: households
+description: >-
+  The monthly snapshot table with household information. To look at this data
+  accurately, you must ALWAYS filter for a specific month using the
+  data_period_date using the last day of the month. Ask the user to specify the
+  period, if they did not initially
+model_name: strum_platform_model
+sql_table_name: dbo.HouseHolds
+default_date: data_period
+identifiers:
+- name: household
+  type: primary
+  sql: concat(${hhid}, ${data_period_raw})
+- name: branchid
+  type: foreign
+  sql: concat(${households.branchid},${households.data_period_raw})
+- name: lifestyleid
+  type: foreign
+  sql: ${lifestyle}
+fields:
+- name: hhid
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: true
+  description: Household ID
+  sql: ${TABLE}.hhid
+  searchable: false
+
+- name: branchid
+  field_type: dimension
+  type: number
+  hidden: true
+  description: Household assigned branch
+  sql: ${TABLE}.branchid
+
+- name: mktid
+  field_type: dimension
+  type: number
+  hidden: true
+  description: >-
+    Id of the Primary Lived-In Market Area. Valid: -1 => falls outside overall
+    market area; 0 => not in any market area but w/in overall; or valid market
+    id.
+  sql: ${TABLE}.mktid
+
+- name: bkhhid
+  field_type: dimension
+  type: string
+  hidden: true
+  description: >-
+    institution specific code to identify customer relationship between one or
+    more accounts.
+  sql: ${TABLE}.bkhhid
+  searchable: true
+
+- name: tractid
+  field_type: dimension
+  type: string
+  hidden: true
+  description: >-
+    Census tract key to tracts.dbf. May be zero (assigned during spatial
+    processing)
+  sql: ${TABLE}.tractid
+  searchable: false
+
+- name: resfooid
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.resfooid
+
+- name: busfooid
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.busfooid
+
+- name: typehh
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Household type identifier. 1 = consumer; 2 = commercial; 3 = Mixed
+  sql: ${TABLE}.typehh
+  searchable: false
+
+- name: status
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Household Status
+  description: Household status. 1=continuing, 2=new, 3 = lost.
+  sql: ${TABLE}.status
+  searchable: false
+
+- name: cl_branch
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.cl_branch
+
+- name: dispname
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Name displayed for household in queries & reports
+  sql: ${TABLE}.dispname
+  searchable: false
+
+- name: mailname
+  field_type: dimension
+  type: string
+  hidden: true
+  description: >-
+    Full name of head of household or full name of corporation used for
+    mailings
+  sql: ${TABLE}.mailname
+  searchable: false
+
+- name: hhtin
+  field_type: dimension
+  type: string
+  hidden: true
+  description: Social Security Number or Employer Id Number of head of household
+  sql: ${TABLE}.hhtin
+  searchable: false
+
+- name: hhphone
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Phone number 1 of the entity in MailName, in the format "xxx-xxx-xxxx".
+  sql: ${TABLE}.hhphone
+  searchable: true
+
+- name: hhphone2
+  field_type: dimension
+  type: string
+  hidden: true
+  description: Phone number 2 of the entity in MailName, in the format "xxx-xxx-xxxx".
+  sql: ${TABLE}.hhphone2
+  searchable: true
+
+- name: hhemail
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Head of household e-mail address
+  sql: ${TABLE}.hhemail
+  searchable: false
+
+- name: officer
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Household Officer
+  description: Code denoting bank officer responsible for the household relationship.
+  sql: ${TABLE}.officer
+  searchable: false
+
+- name: cifcode
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Household CIF Code
+  description: ''
+  sql: ${TABLE}.cifcode
+  searchable: false
+
+- name: address1
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Address line 1
+  sql: ${TABLE}.address1
+  searchable: true
+
+- name: address2
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Address line 2
+  sql: ${TABLE}.address2
+  searchable: false
+
+- name: city
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Household City
+  description: City
+  sql: ${TABLE}.city
+  searchable: false
+
+- name: state
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Household State
+  description: State
+  sql: ${TABLE}.state
+  searchable: true
+
+- name: zip
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Household Zip
+  description: Zip
+  sql: ${TABLE}.zip
+  searchable: false
+
+- name: zip4
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Zip4
+  sql: ${TABLE}.zip4
+  searchable: false
+
+- name: brnchdist
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Distance in miles from household location to assigned branch location
+    (calc)
+  sql: ${TABLE}.brnchdist
+  searchable: false
+
+- name: branch_dt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.branch_dt
+  searchable: false
+
+- name: blockgrp
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Census tract block group (assigned during spatial processing)
+  sql: ${TABLE}.blockgrp
+  searchable: true
+
+- name: crrt
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Carrier Route
+  sql: ${TABLE}.crrt
+  searchable: false
+
+- name: lmi
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Denotes tract income level. (1=low;2=moderate;3=middle;4=upper;9=unknown).
+  sql: ${TABLE}.lmi
+  searchable: false
+
+- name: stfips
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: State FIPS Code
+  sql: ${TABLE}.stfips
+  searchable: true
+
+- name: ctfips
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: County FIPS Code
+  sql: ${TABLE}.ctfips
+  searchable: false
+
+- name: latitude
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Latitude mapping coordinate (from GIS data)
+  sql: ${TABLE}.latitude
+  searchable: false
+
+- name: longitude
+  field_type: dimension
+  type: number
+  hidden: true
+  description: Longitude mapping coordinate (from GIS data)
+  sql: ${TABLE}.longitude
+
+- name: custsvcflg
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: >-
+    Companion services (up to 20). Each byte is a flag that may be defined to
+    denote a specific companion service. The first five services are
+    pre-defined and cannot be changed by the user. The Ordinal position of the
+    flag is the key to CUSTSERV table (compid field).
+  sql: ${TABLE}.custsvcflg
+  searchable: false
+
+- name: srvgrpused
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: >-
+    Each byte is a flag that denotes use of a specific service group by the
+    household. Used to create the service combination report.
+  sql: ${TABLE}.srvgrpused
+  searchable: false
+
+- name: srvgrplbl
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Text label showing service group combinations
+  sql: ${TABLE}.srvgrplbl
+  searchable: false
+
+- name: nomail
+  field_type: dimension
+  type: yesno
+  hidden: true
+  primary_key: false
+  description: >-
+    Flag denoting that one or more accounts in the HH do not want to be
+    solicited via mail
+  sql: ${TABLE}.nomail
+  searchable: false
+
+- name: nocall
+  field_type: dimension
+  type: yesno
+  hidden: true
+  primary_key: false
+  description: >-
+    Flag denoting that one or more accounts in the HH do not want to be
+    solicited via phone
+  sql: ${TABLE}.nocall
+  searchable: false
+
+- name: noemail
+  field_type: dimension
+  type: yesno
+  hidden: true
+  primary_key: false
+  description: >-
+    Flag denoting that one or more accounts in the HH do not want to be
+    solicited via email
+  sql: ${TABLE}.noemail
+  searchable: false
+
+- name: noshare
+  field_type: dimension
+  type: yesno
+  hidden: true
+  primary_key: false
+  description: >-
+    Flag denoting that one or more accounts in the HH do not want their
+    information to be shared with non-affiliated 3rd parties
+  sql: ${TABLE}.noshare
+  searchable: false
+
+- name: noshareall
+  field_type: dimension
+  type: yesno
+  hidden: true
+  primary_key: false
+  description: >-
+    Flag denoting that one or more accounts in the HH do not want their
+    information to be shared with any 3rd parties.
+  sql: ${TABLE}.noshareall
+  searchable: false
+
+- name: timescont
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: >-
+    Each byte is a flag indicating the Program IDs of the last 6 Programs that
+    the household was contacted for. Field contents will be updated as with
+    Program ID as Programs are added (e.g. "0102050810"). Program table will
+    store details (e.g. date of contact, program content, etc).
+  sql: ${TABLE}.timescont
+  searchable: true
+
+- name: hhcompdens
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: '# of competitor branches within a 3 mile radius of each client household.'
+  sql: ${TABLE}.hhcompdens
+  searchable: false
+
+- name: gender
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: 'Household Head Gender '
+  description: Head of household gender code
+  sql: ${TABLE}.gender
+  searchable: true
+
+- name: demogmatch
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Flag indicating hh matched to the demographic database (1=matched at
+    customer level; 2=matched at hh level; 9=no match)
+  sql: ${TABLE}.demogmatch
+  searchable: false
+
+- name: agec
+  field_type: dimension
+  type: number
+  label: Household Age
+  description: Head of household age;  **(1-13 see hhagetable; 99=unavailable)
+  sql: ${TABLE}.agec
+
+- name: lifestyle
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: HH LifeStyle
+  description: Donnelley Buyer Behavior Code (1-51)
+  sql: ${TABLE}.lifestyle
+  searchable: false
+
+- name: nichesub
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nichesub
+  searchable: true
+
+- name: ld9
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.ld9
+  searchable: true
+
+- name: aagegroups
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: >-
+    Adults age groups: <25, 25-34, 35-44, 45-54, 55-64, 65-74, 75+ (1=present;
+    9=unknown)
+  sql: ${TABLE}.aagegroups
+  searchable: true
+
+- name: cagegroups
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: 'Children age group: <3, 3-5, 6-10, 11-15, 16+ (1=present; 0=unknown)'
+  sql: ${TABLE}.cagegroups
+  searchable: true
+
+- name: homeowntyp
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Home owner flag (1=owns, 0 =doesn’t own, 9=unknown)
+  sql: ${TABLE}.homeowntyp
+  searchable: false
+
+- name: credituser
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Credit Card User, =1 if a credit card user, 0 if not, 9 if unknown
+  sql: ${TABLE}.credituser
+  searchable: false
+
+- name: incomegrp
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: HH IncomeGrp
+  description: >-
+    Income group (1 = <15K, 2 =15-29, 3 = 30-49, 4 = 50-74, 5 = 75-99, 6 =
+    100-124, 7=125-149, 8=150+). Always assigned or ascribed for retail
+    households, never for non-retail hhs.
+  sql: ${TABLE}.incomegrp
+  searchable: false
+
+- name: networth
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: HH Networth
+  description: 'see table: tblHHEstimatedNetWorth'
+  sql: ${TABLE}.networth
+  searchable: false
+
+- name: aggvehval
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Combined Market Value of three top valued autos in household. There could
+    be restrictions. NNNNNN (000500-127000)  Blank if vehicle data not
+    available.
+  sql: ${TABLE}.aggvehval
+  searchable: false
+
+- name: lengthres
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.lengthres
+  searchable: false
+
+- name: resage
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Calculated age of dwelling based on current year - year built
+  sql: ${TABLE}.resage
+  searchable: false
+
+- name: resvalue
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.resvalue
+  searchable: false
+
+- name: occupation
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: 'see table: HHouseholdOccupation'
+  sql: ${TABLE}.occupation
+  searchable: false
+
+- name: sic
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: >-
+    This field contains the 6-digit SIC code for the business's primary
+    activity.
+  sql: ${TABLE}.sic
+  searchable: false
+
+- name: sic2
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: >-
+    This field contains the 2-digit SIC code for the business's primary
+    activity.
+  sql: ${TABLE}.sic2
+  searchable: true
+
+- name: sicdiv
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.sicdiv
+  searchable: true
+
+- name: numempl
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    This field contains an alpha code corresponding to the total, actual
+    corporate employment.
+  sql: ${TABLE}.numempl
+  searchable: false
+
+- name: sales
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    The total sales volume of a company as compiled from annual reports and
+    other sources.
+  sql: ${TABLE}.sales
+  searchable: false
+
+- name: yearstart
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Year of first appearance in the telephone directory
+  sql: ${TABLE}.yearstart
+  searchable: false
+
+- name: mail_resp
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Mail Responsive Households - 1 indicates Active Responder; 0 indicates no
+    information; 9 = not scored
+  sql: ${TABLE}.mail_resp
+  searchable: false
+
+- name: contct
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.contct
+  searchable: false
+
+- name: firstnm
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Contact first name
+  sql: ${TABLE}.firstnm
+  searchable: false
+
+- name: lastnm
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: Contact last name
+  sql: ${TABLE}.lastnm
+  searchable: false
+
+- name: prottl
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: The contact's professional title (e.g. MD, DDS, CPA, etc)
+  sql: ${TABLE}.prottl
+  searchable: true
+
+- name: ttlcd
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Title of the designated contact derived from Teleresearch or other source  compilation.
+  sql: ${TABLE}.ttlcd
+  searchable: false
+
+- name: svcopen1
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Service group code of first service opened
+  sql: ${TABLE}.svcopen1
+  searchable: false
+
+- name: svcopen2
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Service group code of second service opened
+  sql: ${TABLE}.svcopen2
+  searchable: false
+
+- name: svcopen3
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Service group code of third service opened
+  sql: ${TABLE}.svcopen3
+  searchable: false
+
+- name: legalstat
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Legal status. 0 => N/A; 1 => proprietorship; 2 => partnership; 3 =>
+    corporation.
+  sql: ${TABLE}.legalstat
+  searchable: false
+
+- name: sitestatus
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.sitestatus
+  searchable: false
+
+- name: ownrent
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Owns/rents code. 0 => not available; 1 => owns; 2 => rents.
+  sql: ${TABLE}.ownrent
+  searchable: false
+
+- name: nomanuflg
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nomanuflg
+  searchable: false
+
+- name: nxsell1
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxsell1
+  searchable: false
+
+- name: nxsell2
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxsell2
+  searchable: false
+
+- name: nxsell3
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxsell3
+  searchable: false
+
+- name: nxsell4
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxsell4
+  searchable: false
+
+- name: nxscore1
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxscore1
+  searchable: false
+
+- name: nxscore2
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxscore2
+  searchable: false
+
+- name: nxscore3
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxscore3
+  searchable: false
+
+- name: nxscore4
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxscore4
+  searchable: false
+
+- name: nxprofit1
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxprofit1
+  searchable: false
+
+- name: nxprofit2
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxprofit2
+  searchable: false
+
+- name: nxprofit3
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxprofit3
+  searchable: false
+
+- name: nxprofit4
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.nxprofit4
+  searchable: false
+
+- name: clbrprox
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.clbrprox
+  searchable: false
+
+- name: clbr_dt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.clbr_dt
+  searchable: false
+
+- name: numcarsown
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numcarsown
+  searchable: false
+
+- name: marital
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.marital
+  searchable: false
+
+- name: pres_child
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pres_child
+  searchable: false
+
+- name: education
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.education
+  searchable: false
+
+- name: dwell_type
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.dwell_type
+  searchable: false
+
+- name: num_lines
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.num_lines
+  searchable: false
+
+- name: has_instal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.has_instal
+  searchable: false
+
+- name: prob_cd
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.prob_cd
+  searchable: false
+
+- name: prob_dep
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.prob_dep
+  searchable: false
+
+- name: prob_ckg
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.prob_ckg
+  searchable: false
+
+- name: prob_inv
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.prob_inv
+  searchable: false
+
+- name: prob_mtg
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.prob_mtg
+  searchable: false
+
+- name: psycleseg
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.psycleseg
+  searchable: false
+
+- name: lifestage
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.lifestage
+  searchable: false
+
+- name: servicegroupusedlist
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.servicegroupusedlist
+  searchable: false
+
+- name: custsvcflglist
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.custsvcflglist
+  searchable: false
+
+- name: cagegrouplist
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cagegrouplist
+  searchable: true
+
+- name: islost
+  field_type: dimension
+  type: yesno
+  hidden: false
+  primary_key: false
+  label: Household Is Lost
+  description: ''
+  sql: ${TABLE}.islost
+  searchable: false
+
+- name: hhdob
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.hhdob
+
+- name: relationship_start
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: false
+  label: HH Relationship Start
+  description: ''
+  timeframes:
+  - raw
+  - date
+  - month
+  - year
+  sql: ${TABLE}.relstart
+
+- name: lastdate
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  description: >-
+    The origination date of the most recently opened account owned by the
+    household
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.lastdate
+
+- name: data_period
+  field_type: dimension_group
+  type: time
+  datatype: date
+  description: >-
+    This is the period of the snapshot, and it is always the date of the end
+    of the month
+  timeframes:
+  - raw
+  - date
+  - month
+  - month_of_year
+  - year
+  sql: ${TABLE}.DataPeriod
+  synonyms:
+  - household
+
+- name: createdon
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.CreatedOn
+
+- name: updatedon
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.UpdatedOn
+
+- name: filedate
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.FileDate
+
+- name: number_of_households
+  field_type: measure
+  type: count_distinct
+  value_format_name: decimal_0
+  sql: ${hhid}
+  filters:
+  - field: islost
+    value: =0
+
+- name: number_of_new_households
+  field_type: measure
+  type: count_distinct
+  value_format_name: decimal_0
+  sql: ${hhid}
+  filters:
+  - field: islost
+    value: =0
+  - field: status
+    value: =2
+
+- name: number_of_lost_households
+  field_type: measure
+  type: count_distinct
+  value_format_name: decimal_0
+  sql: ${hhid}
+  filters:
+  - field: status
+    value: =3
+
+- name: avg_number_of_members_per_household
+  field_type: measure
+  type: number
+  value_format_name: decimal_0
+  sql: >-
+    ISNULL(${customers.number_of_members} / NULLIF(${number_of_households},
+    0), 0)
+
+- name: avg_services_per_household
+  field_type: measure
+  type: average
+  value_format_name: decimal_0
+  sql: ${household_profit.totsvccnt}
+
+- name: avg_profitability_per_household
+  field_type: measure
+  type: number
+  value_format_name: decimal_0
+  sql: ISNULL(${customers.profitability} / NULLIF(${number_of_households}, 0), 0)
+
+- name: avg_age_of_household
+  field_type: measure
+  type: average
+  value_format_name: decimal_0
+  sql: ${agec}
+
+- name: total_household_number
+  field_type: measure
+  type: count_distinct
+  label: Total Number of Households
+  description: Total unique number of households
+  value_format_name: decimal_0
+  sql: case when ${islost}=0 then ${hhid} end
+  canon_date: households.data_period
+
+- name: number_of_profitable_households
+  field_type: measure
+  type: count_distinct
+  label: Number Of Profitable Households
+  description: This is the number of households that are profiltable
+  value_format_name: decimal_0
+  sql: case when ${islost}=0 AND ${household_profit.profcat}=1 then ${hhid} end
+  canon_date: households.data_period
+
+- name: total_household_number_within_2_miles
+  field_type: measure
+  type: count_distinct
+  label: Total Number of Households Within Two Miles
+  description: Total unique number of households
+  value_format_name: decimal_0
+  sql: case when ${islost}=0 AND ${customers.brnchdist}<=2 then ${hhid} end
+  canon_date: households.data_period
+
+

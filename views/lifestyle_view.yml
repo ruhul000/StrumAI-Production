@@ -1,0 +1,67 @@
+version: 1
+type: view
+name: lifestyle
+model_name: strum_platform_model
+sql_table_name: dbo.Lifestyle
+identifiers:
+- name: lifestyleid
+  type: primary
+  sql: ${code}
+fields:
+- name: code
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: true
+  sql: ${TABLE}.code
+
+- name: description
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: LifeStyle Description
+  description: ''
+  sql: ${TABLE}.description
+  searchable: true
+
+- name: avgage
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Avg Age
+  description: ''
+  sql: ${TABLE}.avgage
+  searchable: true
+
+- name: avgincome
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Avg Income
+  description: ''
+  sql: ${TABLE}.avgincome
+  searchable: true
+
+- name: pctoftotal
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.pctoftotal
+
+- name: profile
+  field_type: dimension
+  type: string
+  sql: ${TABLE}.profile
+  searchable: true
+
+- name: interests
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.interests
+  searchable: true

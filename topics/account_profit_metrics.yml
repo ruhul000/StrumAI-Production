@@ -1,0 +1,143 @@
+type: topic
+base_view: account_profit
+model_name: strum_platform_model
+label: Account Profit Metrics
+description: >-
+  The 'Account Profit' dataset provides a comprehensive monthly snapshot of
+  account profitability metrics. Key fields include balance details (original,
+  current, average), interest rates, collateral values, fees (transaction, loan,
+  miscellaneous), and financial ratios like return on assets (ROA) and
+  loan-to-value (LTV). Users must filter data for a specific month using
+  'data_period_date' for accurate insights. The dataset also covers risk
+  assessments, credit status, and fee structures such as late, overdraft, and
+  ATM fees, which are crucial in financial analysis and reporting.
+zoe_description: >-
+  The 'Account Profit' table contains monthly financial metrics for accounts,
+  such as balances, interest rates, and profitability indicators like ROA and
+  LTV. Always filter by 'data_period_date' to ensure data accuracy. This dataset
+  is crucial for evaluating account performance and understanding financial
+  health. Interact with this data by querying specific financial metrics and
+  ensuring date filters are applied as specified.
+hidden: false
+views:
+  accounts:
+    join:
+      join_type: left_outer
+      relationship: one_to_one
+      sql_on: >-
+        concat(${account_profit.acctid},
+        ${account_profit.data_period_raw})=concat(${accounts.acctid},
+        ${accounts.data_period_raw})
+  households:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${accounts.hhid},
+        ${accounts.data_period_raw})=concat(${households.hhid},
+        ${households.data_period_raw})
+  branch:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${accounts.branchid},${accounts.data_period_raw})
+        =concat(${branch.branchid},${branch.data_period_raw})
+  customer_profit:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${accounts.custid},
+        ${accounts.data_period_raw})=concat(${customer_profit.custid},${customer_profit.data_period_raw})
+  customers:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${accounts.custid},
+        ${accounts.data_period_raw})=concat(${customers.custid},${customers.data_period_raw})
+  lifestyle:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${customers.lifestyle}=${lifestyle.code}
+  nbcs_pred:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${transactions.custid},
+        ${transactions.data_period_raw})=concat(${nbcs_pred.custid},
+        ${nbcs_pred.data_period_raw})
+        
+  products:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${accounts.data_period_raw} = ${products.data_period_raw}
+        AND ${accounts.productid} = ${products.productid}
+  product_group:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${accounts.data_period_raw} = ${product_group.data_period_raw}
+        AND ${products.prodgrp} = ${product_group.pgrpid}
+  servgrp:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${accounts.data_period_raw} = ${servgrp.data_period_raw}
+        AND ${product_group.sgrpid} = ${servgrp.sgrpid}
+
+  average_account_loan_derived:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: >-
+        ${average_account_loan_derived.data_period_raw} =
+        ${accounts.data_period_raw}
+  average_account_deposit_derived:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: >-
+        ${average_account_deposit_derived.data_period_raw} =
+        ${accounts.data_period_raw}
+  average_account_derived:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: ${average_account_derived.data_period_raw} = ${accounts.data_period_raw}
+      
+  churn_account_rate_view:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: ${churn_account_rate_view.data_period_raw} = ${accounts.data_period_raw}
+
+  churn_branch_account_rate_view:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: ${churn_branch_account_rate_view.data_period_raw} = ${accounts.data_period_raw}      
+
+  churn_balance_rate_view:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: ${churn_balance_rate_view.data_period_raw} = ${account_profit.data_period_raw}    
+
+  officers:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${accounts.officer},${accounts.data_period_raw})
+        =concat(${officers.officerid},${officers.data_period_raw})
+
+  udfrecords_account:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: concat(${accounts.acctid},${accounts.data_period_raw}) = concat(${udfrecords_account.acctid},${udfrecords_account.data_period_raw})

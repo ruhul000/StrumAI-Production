@@ -1,0 +1,21 @@
+type: topic
+base_view: branch
+model_name: strum_platform_model
+label: Bank Branch Information
+description: >-
+  This dataset contains information about physical bank branches. Key fields
+  include the unique branch identifier (INSTBRANCH), hierarchical identification
+  (ROLLUP), branch name (NAME), and type of branch (BRANCH_TYPE). It also
+  details the branch location, including address fields (ADDRESS, ADDRESS2),
+  city (CITY), state (STATE), ZIP code (ZIP, ZIP4), and geographic coordinates
+  (LATITUDE, LONGITUDE). Additionally, the established date
+  (ESTABLISHED_DATE_NONE) and the total number of branches (NUMBER_OF_BRANCHES)
+  are included.
+zoe_description: >-
+  This dataset provides comprehensive details about physical bank branches,
+  containing identifiers, names, types, and location data including full
+  addresses and geographic coordinates. It also records the establishment date
+  and total branches count for organizational analysis. Use this data to
+  identify and analyze branch locations and their characteristics.
+hidden: false
+views: {}

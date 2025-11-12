@@ -1,0 +1,927 @@
+version: 1
+type: view
+name: customer_profit
+description: >-
+  The monthly snapshot table with customer profit information. To look at this
+  data accurately, you must ALWAYS filter for a specific month using the
+  data_period_date using the last day of the month. Ask the user to specify the
+  period, if they did not initially
+model_name: strum_platform_model
+sql_table_name: dbo.CustomerProfit
+default_date: data_period
+identifiers:
+- name: custid
+  sql: concat(${custid}, ${data_period_raw})
+  type: primary
+fields:
+- name: custid
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Cust ID
+  description: ''
+  sql: ${TABLE}.custid
+  searchable: false
+  synonyms:
+  - Unique Customer, Unique member
+
+- name: hidepbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.hidepbal
+  searchable: false
+
+- name: depliquid
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.depliquid
+  searchable: false
+
+- name: prim_key
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: true
+  sql: concat(${custid}, ${data_period_raw})
+
+- name: profit
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Customer Profit
+  description: >-
+    Annualized aggregate profit for all accounts owned by the customer. (= 0
+    for lost hh)
+  sql: ${TABLE}.profit
+  searchable: false
+  synonyms:
+  - Member Profit, Customer profit
+
+- name: cucap
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: >-
+    Aggregate capital for all accounts owned by the household. (= 0 for lost
+    hh)
+  sql: ${TABLE}.cucap
+  searchable: false
+
+- name: cumprofcy
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cumprofcy
+  searchable: false
+
+- name: cntprofcy
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cntprofcy
+  searchable: false
+
+- name: avgprofit
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.avgprofit
+
+- name: profcat
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Customer Profitability Category
+  description: >-
+    customer profitability category (1 - 4) based on overall distribution of
+    customers.
+  sql: ${TABLE}.profcat
+  searchable: false
+  synonyms:
+  - Profit category
+
+- name: custseg
+  field_type: dimension
+  type: number
+  hidden: true
+  sql: ${TABLE}.custseg
+
+- name: profpct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Customer profitability percentile ranking, 100 (highest) to 0 (lowest).
+  sql: ${TABLE}.profpct
+  searchable: false
+  synonyms:
+  - Profit percentile
+
+- name: deppct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: Customer deposit percentile ranking, 100 (highest) to 0 (lowest).
+  sql: ${TABLE}.deppct
+  searchable: false
+
+- name: loanpct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.loanpct
+  searchable: false
+
+- name: curoe
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.curoe
+  searchable: false
+
+- name: cuvalue
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cuvalue
+  searchable: false
+
+- name: origprof
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Cust Orig Prof
+  description: ''
+  sql: ${TABLE}.origprof
+  searchable: false
+
+- name: origacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.origacct
+  searchable: false
+
+- name: lifeprof
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.lifeprof
+  searchable: false
+
+- name: lvgi
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.lvgi
+  searchable: false
+
+- name: primeacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.primeacct
+  searchable: false
+
+- name: secacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.secacct
+  searchable: false
+
+- name: numacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numacct
+  searchable: false
+  synonyms:
+  - Number of accounts
+
+- name: numrdacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numrdacct
+  searchable: false
+
+- name: numrlacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numrlacct
+  searchable: false
+
+- name: numroacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numroacct
+  searchable: false
+
+- name: numcdacct
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numcdacct
+  searchable: false
+
+- name: numclacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numclacct
+  searchable: false
+
+- name: numcoacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.numcoacct
+  searchable: false
+
+- name: balrdacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.balrdacct
+  searchable: false
+
+- name: balrlacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.balrlacct
+  searchable: false
+
+- name: balroacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.balroacct
+  searchable: false
+
+- name: balcdacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.balcdacct
+  searchable: false
+  synonyms:
+  - Total Commercial Deposit Balance
+
+- name: balclacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.balclacct
+  searchable: false
+  synonyms:
+  - Total Commercial Loan balance
+
+- name: balcoacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.balcoacct
+  searchable: false
+  synonyms:
+  - Total Commercial other balance
+
+- name: profrdacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.profrdacct
+  searchable: false
+
+- name: profrlacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.profrlacct
+  searchable: false
+
+- name: profroacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.profroacct
+  searchable: false
+
+- name: profcdacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.profcdacct
+  searchable: false
+
+- name: profclacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.profclacct
+  searchable: false
+
+- name: profcoacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.profcoacct
+  searchable: false
+
+- name: culoaninc
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.culoaninc
+  searchable: false
+
+- name: cudepinc
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cudepinc
+  searchable: false
+
+- name: cuothinc
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cuothinc
+  searchable: false
+
+- name: cufeeinc
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cufeeinc
+  searchable: false
+
+- name: cullp
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cullp
+  searchable: false
+
+- name: cunie
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cunie
+  searchable: false
+
+- name: totsvccnt
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Total Cust Services
+  description: ''
+  sql: ${TABLE}.totsvccnt
+  searchable: false
+
+- name: depsvccnt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.depsvccnt
+  searchable: false
+
+- name: lnsvccnt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.lnsvccnt
+  searchable: false
+
+- name: othsvccnt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.othsvccnt
+  searchable: false
+
+- name: cmpsvccnt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cmpsvccnt
+  searchable: false
+
+- name: cutottrn
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.cutottrn
+  searchable: false
+
+- name: pprofit
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pprofit
+  searchable: false
+
+- name: pprofcat
+  field_type: dimension
+  type: number
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pprofcat
+  searchable: false
+
+- name: pprofpct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pprofpct
+  searchable: false
+
+- name: pprimeacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pprimeacct
+  searchable: false
+
+- name: psecacct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.psecacct
+  searchable: false
+
+- name: ptotsvccnt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.ptotsvccnt
+  searchable: false
+
+- name: pcmpsvccnt
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pcmpsvccnt
+  searchable: false
+
+- name: pdeppct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pdeppct
+  searchable: false
+
+- name: ploanpct
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.ploanpct
+  searchable: false
+
+- name: hiloanbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.hiloanbal
+  searchable: false
+
+- name: hiprofbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.hiprofbal
+  searchable: false
+
+- name: balquad
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Cust Bal Quad
+  description: ''
+  sql: ${TABLE}.balquad
+  searchable: false
+
+- name: cred_grade
+  field_type: dimension
+  type: number
+  hidden: false
+  primary_key: false
+  label: Cust Cred Garde
+  description: ''
+  sql: ${TABLE}.cred_grade
+  searchable: false
+
+- name: pdepbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.pdepbal
+  searchable: false
+
+- name: ploanbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.ploanbal
+  searchable: false
+
+- name: ptotbal
+  field_type: dimension
+  type: number
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.ptotbal
+  searchable: false
+
+- name: riskrating
+  field_type: dimension
+  type: string
+  hidden: true
+  primary_key: false
+  description: ''
+  sql: ${TABLE}.riskrating
+  searchable: true
+
+- name: islost
+  field_type: dimension
+  type: yesno
+  hidden: false
+  primary_key: false
+  label: CU IsLost
+  description: ''
+  sql: ${TABLE}.islost
+  searchable: false
+
+- name: service_penetration_tier
+  field_type: dimension
+  type: string
+  description: '# Unique Service groups a member has'
+  sql: >-
+    case when ${totsvccnt} = 1 then '1 Service' when ${totsvccnt} = 2 then '2
+    Service' when ${totsvccnt} = 3 then '3 Service' when ${totsvccnt} = 4 then
+    '4 Service' when ${totsvccnt} = 5 then '5 Service' else null end
+  searchable: true
+
+- name: customer_credit_grade
+  field_type: dimension
+  type: string
+  hidden: false
+  label: Credit Grade
+  sql: "CASE \r\n  WHEN ${cred_grade} BETWEEN 1 AND 579 THEN '(1-579)'\r\n  WHEN ${cred_grade}
+    BETWEEN 580 AND 669 THEN '(580-669)'\r\n  WHEN ${cred_grade} BETWEEN 670 AND 739
+    THEN '(670-739)'\r\n  WHEN ${cred_grade} BETWEEN 740 AND 799 THEN '(740-799)'\r\
+    \n  WHEN ${cred_grade} BETWEEN 800 AND 850 THEN '(800-850)'\r\n  ELSE NULL \r\n\
+    END"
+  searchable: true
+
+- name: profit_tier
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: Cust Profit Category
+  description: >-
+    customer profitability category (1 - 4) based on overall distribution of
+    customers.
+  sql: "CASE \r\n    WHEN ${profcat} = 1 THEN '1-Platinum' \r\n    WHEN ${profcat}
+    = 2 THEN '2-Gold'\r\n    WHEN ${profcat} = 3 THEN '3-Silver' \r\n    WHEN ${profcat}
+    = 4 THEN '4-Bronze' \r\n    ELSE NULL END\r\n"
+  searchable: true
+  synonyms:
+  - Profit category
+
+- name: total_services
+  field_type: dimension
+  type: string
+  hidden: false
+  primary_key: false
+  label: CU Total Service Used
+  description: total services used by customers
+  sql: "CASE\r\n    WHEN ${totsvccnt} = 1 THEN '1 Service'\r\n    WHEN ${totsvccnt}
+    = 2 THEN '2 Service'\r\n    WHEN ${totsvccnt} = 3 THEN '3 Service'\r\n    WHEN
+    ${totsvccnt} = 4 THEN '4 Service'\r\n    ELSE '5+ Service'\r\nEND "
+  searchable: true
+
+- name: hidepdt
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - month
+  - month_of_year
+  - year
+  sql: ${TABLE}.hidepdt
+
+- name: hiloandt
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - month
+  - month_of_year
+  - year
+  sql: ${TABLE}.hiloandt
+
+- name: hiprofdt
+  field_type: dimension_group
+  type: time
+  datatype: datetime
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.hiprofdt
+
+- name: data_period
+  field_type: dimension_group
+  type: time
+  datatype: date
+  description: >-
+    This is the period of the snapshot, and it is always the date of the end
+    of the month
+  timeframes:
+  - raw
+  - date
+  - month
+  sql: ${TABLE}.DataPeriod
+  synonyms:
+  - customer
+  - member
+
+- name: created_on
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: false
+  label: Cust Created On
+  description: ''
+  timeframes:
+  - raw
+  - date
+  - month
+  - year
+  sql: ${TABLE}.CreatedOn
+
+- name: updatedon
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.UpdatedOn
+
+- name: filedate
+  field_type: dimension_group
+  type: time
+  datatype: date
+  hidden: true
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}.FileDate
+
+- name: Lost_Loan_Members
+  field_type: measure
+  type: count_distinct
+  label: Lost Loan Members
+  description: Total unique number of lost loan members
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=2 AND ${customers.status}= 3 then
+    ${custid} end
+  canon_date: customers.data_period
+
+- name: Lost_deposit_Members
+  field_type: measure
+  type: count_distinct
+  label: Lost Deposit Members
+  description: Total unique number of lost depositmembers
+  value_format_name: decimal_0
+  sql: >-
+    case when ${servgrp.bscategory}=1 AND ${customers.status}= 3 then
+    ${custid} end
+  canon_date: customers.data_period
+
+- name: total_customer_profit
+  field_type: measure
+  type: sum
+  description: The total profit at the customer level
+  sql: ${TABLE}.PROFIT
+
+- name: single_service_count
+  field_type: measure
+  type: count
+  hidden: true
+  description: '# Members with only 1 service'
+  value_format_name: decimal_0
+  sql: ${primeacct}
+  filters:
+  - field: islost
+    value: =0
+
+- name: avg_customer_profit
+  field_type: measure
+  type: average
+  label: average cutomers profit
+  description: The average profit at the customer level
+  value_format_name: usd
+  sql: ${profit}
+
+- name: avg_services_per_member
+  field_type: measure
+  type: average
+  description: '# of average services per member/customer'
+  value_format_name: decimal_0
+  sql: ${totsvccnt}
+  filters:
+  - field: islost
+    value: =0
+
+- name: avg_profitability_per_member
+  field_type: measure
+  type: average
+  description: Avg Member Profit
+  value_format_name: decimal_0
+  sql: ${profit}
+  filters:
+  - field: islost
+    value: =0
+
+- name: avg_fico_score
+  field_type: measure
+  type: average
+  label: FICO Range
+  value_format_name: decimal_0
+  sql: ${cred_grade}
+
+- name: combined_deposit_balance
+  field_type: measure
+  type: sum
+  label: Combined Deposit Balance
+  description: >-
+    Sum of deposit account balances (balcdacct + balrdacct), treating NULLs as
+    0.
+  sql: ISNULL(${balcdacct}, 0) + ISNULL(${balrdacct}, 0)
+  canon_date: data_period
+
+- name: combined_loan_balance
+  field_type: measure
+  type: sum
+  label: Combined Loan Balance
+  description: Sum of loan account balances (balclacct + balrlacct), treating NULLs
+    as 0.
+  sql: ISNULL(${balclacct}, 0) + ISNULL(${balrlacct}, 0)
+  canon_date: data_period

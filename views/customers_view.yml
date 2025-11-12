@@ -1,0 +1,2019 @@
+version: 1
+type: view
+name: customers
+description: >-
+  The monthly snapshot table with customer (member) information. To look at this
+  data accurately, you must ALWAYS filter for a specific month using the
+  data_period_date, using the last day of the month. Ask the user to specify the
+  period, if they did not initially. If the user didn't specify, use the latest
+  data period with data populated
+model_name: strum_platform_model
+sql_table_name: dbo.Customers
+default_date: data_period
+identifiers:
+  - name: custid
+    type: primary
+    sql: concat(${custid}, ${data_period_raw})
+  - name: lifestyleid
+    type: foreign
+    sql: ${lifestyle}
+  - name: officer_id
+    type: foreign
+    sql: concat(${officer}, ${data_period_raw})
+  - name: branchid
+    type: foreign
+    sql: concat(${branchid}, ${data_period_raw})
+fields:
+  - name: custid
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Customer ID
+    description: Unique ID for each customer
+    drill_fields:
+      - fullname
+      - gender
+      - custphone
+      - custemail
+      - address1
+      - city
+      - state
+      - zip
+    sql: ${TABLE}.custid
+    searchable: false
+
+  - name: hhid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: Household ID
+    sql: ${TABLE}.hhid
+    searchable: false
+
+  - name: branchid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.branchid
+    searchable: false
+
+  - name: obranchid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: Original Branch
+    sql: ${TABLE}.obranchid
+    searchable: false
+
+  - name: mktid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: >-
+      Id of the Primary Lived-In Market Area. Valid -1 => falls outside overall
+      market area; 0 => not in any market area but w/in overall; or valid market
+      id.
+    sql: ${TABLE}.mktid
+    searchable: false
+
+  - name: tractid
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: Census tract ID
+    sql: ${TABLE}.tractid
+    searchable: false
+
+  - name: resfooid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.resfooid
+    searchable: false
+
+  - name: busfooid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.busfooid
+    searchable: false
+
+  - name: personaid
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.personaid
+    searchable: false
+
+  - name: residential_age
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: This is the age of the home or house the customer lives in
+    sql: ${TABLE}.resage
+    searchable: false
+
+  - name: prim_key
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: true
+    sql: concat(${custid}, ${data_period_raw})
+    searchable: false
+
+  - name: cifcode
+    field_type: dimension
+    type: string
+    primary_key: false
+    description: a unique ID for a membership account
+    sql: ${TABLE}.cifcode
+    searchable: true
+    synonyms:
+      - Membership
+
+  - name: customer_type
+    field_type: dimension
+    type: number
+    description: 1 = Retail, 2 = Commercial, 3= Both, meaning Commercial and Retail
+    sql: ${TABLE}.typecust
+    synonyms:
+      - retail
+      - commerical
+
+  - name: customer_type_description
+    field_type: dimension
+    type: string
+    hidden: false
+    label: Cust Status Tpye
+    sql: >-
+      CASE ${TABLE}.typecust WHEN 1 THEN 'Retail' WHEN 2 THEN 'Commercial' WHEN
+      3 THEN 'Both' ELSE 'Unknown' END
+    searchable: true
+    synonyms:
+      - retail
+      - commercial
+      - both
+
+  - name: status
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: Cust Status
+    description: >-
+      In this status field, 1 means Existing, 2 means New, 3 means Lost (or
+      churned / inactive). Using 1 and 2 together shows all active customers.
+    sql: ${TABLE}.status
+    searchable: true
+    synonyms:
+      - active
+      - churned
+      - existing
+      - new
+      - lost
+
+  - name: status_code
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    description: ''
+    sql: >-
+      case when ${status} = 1 then 'Existing' when ${status} = 2 then 'New' when
+      ${status} = 3 then 'Lost' else null end
+    searchable: true
+
+  - name: cl_branch
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.cl_branch
+    searchable: false
+
+  - name: officer
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.officer
+    searchable: false
+
+  - name: gender
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Cust Gender
+    description: Customer gender (retail only)
+    sql: ${TABLE}.gender
+    searchable: true
+
+  - name: fullname
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.fullname
+    searchable: false
+
+  - name: lastname
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.lastname
+    searchable: false
+
+  - name: firstname
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.firstname
+    searchable: false
+
+  - name: primary
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: >-
+      Indicates that customer is a primary accountholder on 1 or more accounts.
+      (Yes =1; 0 = No)
+    sql: ${TABLE}.primary
+    searchable: false
+
+  - name: secondary
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: >-
+      Indicates that customer is a secondary accountholder on 1 or more
+      accounts. (Yes =1; 0 = No)
+    sql: ${TABLE}.secondary
+    searchable: false
+
+  - name: tin
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: Unique ID for Customer, this is the same as the CustID
+    sql: ${TABLE}.tin
+    searchable: false
+
+  - name: custphone
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: Primary Phone number
+    sql: ${TABLE}.custphone
+    searchable: true
+
+  - name: custphone2
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custphone2
+    searchable: false
+
+  - name: custemail
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: Primary Email
+    sql: ${TABLE}.custemail
+    searchable: false
+
+  - name: custemail2
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custemail2
+    searchable: true
+
+  - name: custemail3
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custemail3
+    searchable: true
+
+  - name: address1
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.address1
+    searchable: true
+
+  - name: address2
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.address2
+    searchable: false
+
+  - name: city
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Cust City
+    description: ''
+    sql: ${TABLE}.city
+    searchable: false
+
+  - name: state
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Cust State
+    description: ''
+    sql: ${TABLE}.state
+    searchable: true
+
+  - name: zip
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Cust ZIP
+    description: Zip Code
+    sql: ${TABLE}.zip
+    searchable: false
+
+  - name: zip4
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.zip4
+    searchable: false
+
+  - name: brnchdist
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: 'Cust Branch Distance '
+    description: Distance to Customer Branch
+    sql: ${TABLE}.brnchdist
+    searchable: false
+
+  - name: brnchdist_category
+    field_type: dimension
+    type: string
+    hidden: false
+    label: Cust Branch Distance Category
+    description: Distance to Customer Branch (bucketized)
+    sql: >-
+      CASE WHEN ${TABLE}.brnchdist < 1 THEN 'Under 1 mile' WHEN
+      ${TABLE}.brnchdist >= 1 AND ${TABLE}.brnchdist < 3 THEN '1 - 3 miles' WHEN
+      ${TABLE}.brnchdist >= 3 AND ${TABLE}.brnchdist < 5 THEN '3 - 5 miles' WHEN
+      ${TABLE}.brnchdist >= 5 AND ${TABLE}.brnchdist < 10 THEN '5 - 10 miles'
+      WHEN ${TABLE}.brnchdist >= 10 THEN '10+ miles' ELSE 'Unknown' END
+    searchable: true
+
+  - name: branch_dt
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: Drive time to customer branch
+    sql: ${TABLE}.branch_dt
+    searchable: false
+
+  - name: blockgrp
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.blockgrp
+    searchable: true
+
+  - name: crrt
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.crrt
+    searchable: false
+
+  - name: lmi
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: Denotes tract income level. (1=low;2=moderate;3=middle;4=upper;9=unknown).
+    sql: ${TABLE}.lmi
+    searchable: false
+
+  - name: stfips
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: State ID
+    sql: ${TABLE}.stfips
+    searchable: true
+
+  - name: ctfips
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: County ID
+    sql: ${TABLE}.ctfips
+    searchable: false
+
+  - name: latitude
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.latitude
+    searchable: false
+
+  - name: longitude
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.longitude
+    searchable: false
+
+  - name: custsvcflg
+    field_type: dimension
+    type: string
+    sql: ${TABLE}.custsvcflg
+    searchable: false
+
+  - name: srvgrpused
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.srvgrpused
+    searchable: false
+
+  - name: srvgrplbl
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.srvgrplbl
+    searchable: false
+
+  - name: customer_age_tier
+    field_type: dimension
+    type: string
+    description: This is the age tier of the customer in years
+    sql: >-
+      CASE WHEN ${customer_age} > 0 AND ${customer_age} < 25 THEN '<25' WHEN
+      ${customer_age} >= 25 AND ${customer_age} < 35 THEN '25-34' WHEN
+      ${customer_age} >= 35 AND ${customer_age} < 45 THEN '35-44' WHEN
+      ${customer_age} >= 45 AND ${customer_age} < 55 THEN '45-54' WHEN
+      ${customer_age} >= 55 AND ${customer_age} < 65 THEN '55-64' WHEN
+      ${customer_age} >= 65 AND ${customer_age} < 75 THEN '65-74' WHEN
+      ${customer_age} >= 75 THEN '75++' ELSE 'NA' END
+    searchable: true
+    canon_date: data_period
+
+  - name: nomail
+    field_type: dimension
+    type: yesno
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nomail
+    searchable: false
+
+  - name: nocall
+    field_type: dimension
+    type: yesno
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nocall
+    searchable: false
+
+  - name: noemail
+    field_type: dimension
+    type: yesno
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.noemail
+    searchable: false
+
+  - name: noshare
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.noshare
+    searchable: false
+
+  - name: noshareall
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.noshareall
+    searchable: false
+
+  - name: timescont
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.timescont
+    searchable: true
+
+  - name: gencode
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: Cust Gencode
+    description: ''
+    sql: ${TABLE}.gencode
+    searchable: false
+
+  - name: demogmatch
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.demogmatch
+    searchable: false
+
+  - name: customer_age
+    field_type: dimension
+    type: number
+    description: This is the age of the customer in years
+    sql: ${TABLE}.agec
+    searchable: true
+    canon_date: data_period
+
+  - name: lifestyle
+    field_type: dimension
+    type: number
+    hidden: true
+    sql: ${TABLE}.lifestyle
+
+  - name: nichesub
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nichesub
+    searchable: true
+
+  - name: ld9
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.ld9
+    searchable: true
+
+  - name: aagegroups
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.aagegroups
+    searchable: false
+
+  - name: cagegroups
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.cagegroups
+    searchable: true
+
+  - name: home_owner
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: Home owner flag (1=owns, 0 =does not own, 9=unknown)
+    sql: ${TABLE}.homeowntyp
+    searchable: true
+
+  - name: credituser
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.credituser
+    searchable: false
+
+  - name: income_group
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: Cust Income Group
+    description: >-
+      Income group (1 = <15K, 2 =15-29, 3 = 30-49, 4 = 50-74, 5 = 75-99, 6 =
+      100-124, 7=125-149, 8=150+). Always assigned or ascribed for retail
+      households, never for non-retail hhs.
+    sql: ${TABLE}.incomegrp
+    searchable: false
+
+  - name: networth
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.networth
+    searchable: false
+
+  - name: aggvehval
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: >-
+      Combined Market Value of three top valued autos in household. There could
+      be restrictions. NNNNNN (000500-127000)  Blank if vehicle data not
+      available.
+    sql: ${TABLE}.aggvehval
+    searchable: false
+
+  - name: lengthres
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: Length of time a customer has been a resident at the address
+    sql: ${TABLE}.lengthres
+    searchable: false
+
+  - name: resvalue
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.resvalue
+    searchable: false
+
+  - name: occupation
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.occupation
+    searchable: false
+
+  - name: sic
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.sic
+    searchable: false
+
+  - name: sic2
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.sic2
+    searchable: true
+
+  - name: sicdiv
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.sicdiv
+    searchable: true
+
+  - name: numempl
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: Cust Number of Employee
+    description: ''
+    sql: ${TABLE}.numempl
+    searchable: false
+
+  - name: sales
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: Cu Sales
+    description: >-
+      The total sales volume of a company as compiled from annual reports and
+      other sources.
+    sql: ${TABLE}.sales
+    searchable: false
+
+  - name: yearstart
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.yearstart
+    searchable: false
+
+  - name: mail_resp
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: >-
+      Mail Responsive Households - 1 indicates Active Responder; 0 indicates no
+      information; 9 = not scored
+    sql: ${TABLE}.mail_resp
+    searchable: false
+
+  - name: contct
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.contct
+    searchable: false
+
+  - name: firstnm
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.firstnm
+    searchable: false
+
+  - name: lastnm
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.lastnm
+    searchable: false
+
+  - name: prottl
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.prottl
+    searchable: true
+
+  - name: ttlcd
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.ttlcd
+    searchable: false
+
+  - name: svcopen1
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.svcopen1
+    searchable: false
+
+  - name: svcopen2
+    field_type: dimension
+    type: number
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.svcopen2
+    searchable: false
+
+  - name: svcopen3
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.svcopen3
+    searchable: false
+
+  - name: legalstat
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.legalstat
+    searchable: false
+
+  - name: sitestatus
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.sitestatus
+    searchable: false
+
+  - name: ownrent
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.ownrent
+    searchable: false
+
+  - name: nomanuflg
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nomanuflg
+    searchable: false
+
+  - name: ecompflg
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.ecompflg
+    searchable: true
+
+  - name: hits_cm
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.hits_cm
+    searchable: false
+
+  - name: hits_pm
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.hits_pm
+    searchable: false
+
+  - name: custcode1
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custcode1
+    searchable: true
+
+  - name: custcode2
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custcode2
+    searchable: true
+
+  - name: custnum1
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custnum1
+    searchable: false
+
+  - name: custnum2
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custnum2
+    searchable: false
+
+  - name: custtext1
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custtext1
+    searchable: true
+
+  - name: custtext2
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custtext2
+    searchable: true
+
+  - name: custtext3
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custtext3
+    searchable: true
+
+  - name: nxsell1
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxsell1
+    searchable: false
+
+  - name: nxsell2
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxsell2
+    searchable: false
+
+  - name: nxsell3
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxsell3
+    searchable: false
+
+  - name: nxsell4
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxsell4
+    searchable: false
+
+  - name: nxscore1
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxscore1
+    searchable: false
+
+  - name: nxscore2
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxscore2
+    searchable: false
+
+  - name: nxscore3
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxscore3
+    searchable: false
+
+  - name: nxscore4
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxscore4
+    searchable: false
+
+  - name: nxprofit1
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxprofit1
+    searchable: false
+
+  - name: nxprofit2
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxprofit2
+    searchable: false
+
+  - name: nxprofit3
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxprofit3
+    searchable: false
+
+  - name: nxprofit4
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.nxprofit4
+    searchable: false
+
+  - name: clbrprox
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.clbrprox
+    searchable: false
+
+  - name: clbr_dt
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.clbr_dt
+    searchable: false
+
+  - name: numcarsown
+    field_type: dimension
+    type: number
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.numcarsown
+    searchable: false
+
+  - name: matchkey
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.matchkey
+    searchable: true
+
+  - name: psycleseg
+    field_type: dimension
+    type: number
+    hidden: false
+    primary_key: false
+    label: Cust Psycleseg
+    description: ''
+    sql: ${TABLE}.psycleseg
+    searchable: false
+
+  - name: lifestage
+    field_type: dimension
+    type: string
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.lifestage
+    searchable: true
+
+  - name: servicegroupusedlist
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.servicegroupusedlist
+    searchable: false
+
+  - name: custsvcflglist
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.custsvcflglist
+    searchable: false
+
+  - name: cagegrouplist
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.cagegrouplist
+    searchable: true
+
+  - name: tsdate
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.tsdate
+    searchable: true
+
+  - name: dbdate
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    description: ''
+    sql: ${TABLE}.dbdate
+    searchable: true
+
+  - name: islost
+    field_type: dimension
+    type: yesno
+    hidden: false
+    primary_key: false
+    label: Cust IsLost
+    description: ''
+    sql: ${TABLE}.islost
+    searchable: false
+
+  - name: personaname
+    field_type: dimension
+    type: string
+    hidden: true
+    primary_key: false
+    label: cust personaname
+    description: ''
+    sql: ${TABLE}.personaname
+    searchable: true
+
+  - name: length_of_membership
+    field_type: dimension
+    type: number
+    primary_key: false
+    label: cust length of membership
+    description: ''
+    sql: datediff(year, ${relationship_start_date},${accounts.data_period_raw})
+    searchable: false
+
+  - name: length_of_membership_tier
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Cust Length of Membership Tier
+    description: ''
+    sql: >-
+      CASE WHEN ${length_of_membership} >= 0 AND ${length_of_membership} < 1
+      THEN '< 01 Year' WHEN ${length_of_membership} >= 1 AND
+      ${length_of_membership} < 3 THEN '01 < 03 Years' WHEN
+      ${length_of_membership} >= 3 AND ${length_of_membership} < 5 THEN '03 < 05
+      Years' WHEN ${length_of_membership} >= 5 AND ${length_of_membership} < 10
+      THEN '05 < 10 Years' WHEN ${length_of_membership} >= 10 AND
+      ${length_of_membership} < 15 THEN '10 < 15 Years' ELSE '15 Years +' END
+    searchable: true
+
+  - name: gencode_description
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Cust Gencode Description
+    description: generation code description
+    sql: |
+      CASE 
+        WHEN ${gencode} = 1 THEN '1-Gen Z'
+        WHEN ${gencode} = 2 THEN '2-Millennials'
+        WHEN ${gencode} = 3 THEN '3-Gen X'
+        WHEN ${gencode} = 4 THEN '4-Boomers'
+        WHEN ${gencode} = 5 THEN '5-Silent'
+        WHEN ${gencode} = 6 THEN '6-Greatest'
+        WHEN ${gencode} = 9 THEN '9-Unavailable'
+        ELSE NULL 
+      END
+    searchable: true
+
+  - name: annual_sales
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Annual Sales
+    description: >-
+      The total segmented sales volume of a company as compiled from annual
+      reports and other sources.
+    sql: >-
+      CASE WHEN ${sales} >= 1 AND ${sales} <= 499999 THEN '1-$1 to $0.5M' WHEN
+      ${sales} >= 500000 AND ${sales} <= 999999 THEN '2-$0.5M to $0.99M' WHEN
+      ${sales} >= 1000000 AND ${sales} <= 2499999 THEN '3-$1M to $2.49M' WHEN
+      ${sales} >= 2500000 AND ${sales} <= 4999999 THEN '4-$2.5M to $4.99M' WHEN
+      ${sales} >= 5000000 AND ${sales} <= 9999999 THEN '5-$5M to $9.99M' WHEN
+      ${sales} >= 10000000 AND ${sales} <= 24999999 THEN '6-$10M to $24.99M'
+      WHEN ${sales} >= 25000000 AND ${sales} <= 49999999 THEN '7-$25M to
+      $49.99M' WHEN ${sales} >= 50000000 AND ${sales} <= 99999999 THEN '8-$50M
+      to $99.99M' ELSE '9-Unavailable' END
+    canon_date: customers.data_period
+    searchable: true
+
+  - name: employee_size
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: Employee Size
+    description: The number of employees grouped into standard size ranges.
+    sql: >-
+      CASE WHEN ${numempl} >= 1 AND ${numempl} <= 4 THEN '1 to 4' WHEN
+      ${numempl} >= 5 AND ${numempl} <= 9 THEN '5 to 9' WHEN ${numempl} >= 10
+      AND ${numempl} <= 19 THEN '10 to 19' WHEN ${numempl} >= 20 AND ${numempl}
+      <= 49 THEN '20 to 49' WHEN ${numempl} >= 50 AND ${numempl} <= 99 THEN '50
+      to 99' WHEN ${numempl} >= 100 AND ${numempl} <= 999 THEN '100 to 999' ELSE
+      'Unavailable' END
+    searchable: true
+
+  - name: custdob
+    field_type: dimension_group
+    type: time
+    datatype: datetime
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.custdob
+    synonyms:
+      - Date of birth
+
+  - name: relationship_start
+    field_type: dimension_group
+    type: time
+    datatype: datetime
+    description: >-
+      This is when the member or customer joined. You must use this to filter
+      for when a member joined.
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.relstart
+    synonyms:
+      - member
+      - joined
+      - customer
+
+  - name: relationship_start_eom
+    field_type: dimension_group
+    type: time
+    datatype: date
+    hidden: true
+    description: ''
+    timeframes:
+      - raw
+      - date
+    sql: eomonth(${TABLE}.relstart)
+
+  - name: lastdate
+    field_type: dimension_group
+    type: time
+    datatype: datetime
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.lastdate
+
+  - name: lasthitdt
+    field_type: dimension_group
+    type: time
+    datatype: datetime
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.lasthitdt
+
+  - name: custdate1
+    field_type: dimension_group
+    type: time
+    datatype: datetime
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.custdate1
+
+  - name: custdate2
+    field_type: dimension_group
+    type: time
+    datatype: datetime
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.custdate2
+
+  - name: member_join
+    field_type: dimension_group
+    type: time
+    datatype: date
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.membjoindt
+
+  - name: last_tx_dt
+    field_type: dimension_group
+    type: time
+    datatype: date
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.last_tx_dt
+
+  - name: data_period
+    field_type: dimension_group
+    type: time
+    datatype: date
+    description: >-
+      This is the period of the snapshot, and it is always the date of the end
+      of the month
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - month
+      - month_of_year
+      - year
+    sql: ${TABLE}.DataPeriod
+    synonyms:
+      - customers
+      - members
+
+  - name: createdon
+    field_type: dimension_group
+    type: time
+    datatype: date
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.CreatedOn
+
+  - name: updatedon
+    field_type: dimension_group
+    type: time
+    datatype: date
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.UpdatedOn
+
+  - name: filedate
+    field_type: dimension_group
+    type: time
+    datatype: date
+    hidden: true
+    timeframes:
+      - raw
+      - date
+      - day_of_year
+      - week
+      - week_of_year
+      - month
+      - month_of_year
+      - quarter
+      - year
+    sql: ${TABLE}.FileDate
+
+  - name: number_of_new_members
+    field_type: measure
+    type: count_distinct
+    hidden: false
+    value_format_name: decimal_0
+    sql: ${custid}
+    filters:
+      - field: islost
+        value: '=0'
+      - field: status
+        value: '=2'
+
+  - name: number_of_lost_members
+    field_type: measure
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: ${custid}
+    filters:
+      - field: status
+        value: '=3'
+
+  - name: Lost_Members
+    field_type: measure
+    type: count_distinct
+    label: Lost members
+    description: Total unique number of lost members
+    value_format_name: decimal_0
+    sql: case when ${status}= 3 then ${custid} end
+    canon_date: customers.data_period
+
+  - name: single_service_count
+    field_type: measure
+    type: count
+    hidden: true
+    value_format_name: decimal_0
+    sql: ${customer_profit.primeacct}
+    filters:
+      - field: islost
+        value: '=0'
+
+  - name: pct_single_service
+    field_type: measure
+    type: number
+    hidden: true
+    description: ''
+    value_format_name: decimal_0
+    sql: ISNULL(${single_service_count} / NULLIF(${number_of_members}, 0), 0)
+
+  - name: profitability
+    field_type: measure
+    type: sum
+    hidden: false
+    label: Cust Profit
+    description: Customer Profit
+    value_format_name: decimal_0
+    sql: ${customer_profit.profit}
+
+  - name: number_of_loan_members
+    field_type: measure
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: ${custid}
+    filters:
+      - field: servgrp.bscategory
+        value: '=2'
+      - field: islost
+        value: '=0'
+
+  - name: number_of_loans
+    field_type: measure
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: ${account_profit.acctid}
+    filters:
+      - field: servgrp.bscategory
+        value: '=2'
+      - field: islost
+        value: '=0'
+
+  - name: deposit_balances
+    field_type: measure
+    type: sum
+    description: Members & Balances by Lifestyle Segment
+    value_format_name: usd
+    sql: ${account_profit.cur_bal}
+    filters:
+      - field: servgrp.bscategory
+        value: '=1'
+      - field: islost
+        value: '=0'
+
+  - name: number_of_deposit_members
+    field_type: measure
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: ${custid}
+    filters:
+      - field: servgrp.bscategory
+        value: '=1'
+      - field: islost
+        value: '=0'
+
+  - name: number_of_deposits
+    field_type: measure
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: ${account_profit.acctid}
+    filters:
+      - field: servgrp.bscategory
+        value: '=1'
+      - field: islost
+        value: '=0'
+
+  - name: avg_number_deposits_per_member
+    field_type: measure
+    type: number
+    value_format_name: decimal_0
+    sql: ISNULL(${number_of_deposits} / NULLIF(${number_of_deposit_members}, 0), 0)
+
+  - name: avg_deposits_per_member
+    field_type: measure
+    type: number
+    value_format_name: decimal_0
+    sql: ISNULL(${deposit_balances} / NULLIF(${number_of_deposit_members}, 0), 0)
+
+  - name: deposit_profitability
+    field_type: measure
+    type: sum
+    value_format_name: decimal_0
+    sql: ${account_profit.profit}
+    filters:
+      - field: servgrp.bscategory
+        value: '=1'
+      - field: islost
+        value: '=0'
+
+  - name: avg_length_of_membership
+    field_type: measure
+    type: average
+    value_format_name: decimal_0
+    sql: ${length_of_membership}
+
+  - name: avg_accounts_per_member
+    field_type: measure
+    type: number
+    label: Avg Account Per Member
+    value_format_name: decimal_2
+    sql: CAST(${account_profit.total_accounts} AS DECIMAL(38,6)) / NULLIF(CAST(${customers.number_of_members} AS DECIMAL(38,6)), 0)
+
+  - name: avg_loan_value_per_member
+    field_type: measure
+    type: number
+    label: Avg Loan Value Per Member
+    value_format_name: usd
+    sql: ISNULL(${loan_balances} / NULLIF(${number_of_loan_members}, 0), 0)
+    canon_date: customers.data_period
+
+  - name: loan_profitability
+    field_type: measure
+    type: sum
+    label: Loan Profitability
+    value_format_name: usd
+    sql: >-
+      case when ${servgrp.bscategory}=2 and ${islost}=0 then
+      ${account_profit.profit} end
+    canon_date: customers.data_period
+
+  - name: loan_balances
+    field_type: measure
+    type: sum
+    label: Loan Balances
+    description: Members & Balances by Lifestyle Segment
+    value_format_name: usd
+    sql: >-
+      case when ${servgrp.bscategory}=2 and ${islost}=0 then
+      ${account_profit.cur_bal} end
+    canon_date: customers.data_period
+
+  - name: number_of_members
+    field_type: measure
+    type: count_distinct
+    label: Number Of Members
+    description: >-
+      This is the number of members that are active (they all have status 1 or
+      2)
+    value_format_name: decimal_0
+    sql: case when ${islost}=0 AND ${accounts.ISLOST}=0 then ${custid} end
+    synonyms:
+      - customer
+    canon_date: customers.data_period
+
+  - name: total_months
+    field_type: measure
+    type: count_distinct
+    label: Total Months
+    description: months distinct count
+    value_format_name: decimal_0
+    sql: ${data_period_date}
+    synonyms:
+      - customer
+    canon_date: customers.data_period
+
+  - name: net_member_average
+    field_type: measure
+    type: number
+    label: Member Average
+    value_format_name: decimal_0
+    sql: ${customers.number_of_members} / ${customers.total_months}
+    canon_date: customers.data_period
+
+  - name: members_latest
+    field_type: measure
+    type: count_distinct
+    label: Number Of Members Latest
+    description: >-
+      This is the number of members that are active (they all have status 1 or
+      2)
+    value_format_name: decimal_0
+    sql: "CASE \r\n  WHEN ${islost} = 0 \r\n    AND ${accounts.islost} = 0 \r\n    AND ${data_period_raw} ='2024-12-31' \r\n  THEN ${custid}\r\nEND\r\n"
+    synonyms:
+      - customer
+    canon_date: customers.data_period
+
+  - name: members_previous
+    field_type: measure
+    type: count_distinct
+    label: Number Of Members Previous
+    description: >-
+      This is the number of members that are active (they all have status 1 or
+      2)
+    value_format_name: decimal_0
+    sql: "CASE \r\n  WHEN ${islost} = 0 \r\n    AND ${accounts.islost} = 0 \r\n    AND ${data_period_raw} ='2024-11-30' \r\n  THEN ${custid}\r\nEND\r\n"
+    synonyms:
+      - customer
+    canon_date: customers.data_period
+
+  - name: members_growth
+    field_type: measure
+    type: number
+    label: Net Members Growth
+    description: Growth between December and November
+    value_format_name: decimal_0
+    sql: ${customers.members_latest}-${customers.members_previous}
+    synonyms:
+      - customer
+    canon_date: customers.data_period
+
+  - name: number_of_profitable_members
+    field_type: measure
+    type: count_distinct
+    label: Number Of Profitable Members
+    description: >-
+      This is the number of members that are active (they all have status 1 or
+      2)
+    value_format_name: decimal_0
+    sql: >-
+      case when ${islost}=0 AND ${accounts.ISLOST}=0 AND
+      ${customer_profit.profcat}=1 then ${custid} end
+    synonyms:
+      - customer
+    canon_date: customers.data_period
+
+  - name: Member_Latest
+    field_type: measure
+    type: count_distinct
+    label: Members Latest
+    description: Total unique number of members Latest Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date)
+      = EOMONTH(GETDATE(), -3) THEN ${custid} END
+    canon_date: customers.data_period
+
+  - name: Member_Prior
+    field_type: measure
+    type: count_distinct
+    label: Members Prior
+    description: Total lost unique number of members prior Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date)
+      = EOMONTH(GETDATE(), -10) THEN ${custid} END
+    canon_date: customers.data_period
+
+  - name: Net_Member_Growth
+    field_type: measure
+    type: number
+    label: Net Members Growth
+    description: >-
+      difference between the total members prior data period and latest data
+      period
+    value_format_name: decimal_0
+    sql: ${customers.Member_Latest}-${customers.Member_Prior}
+    canon_date: data_period
+
+  - name: Lost_Members_Latest
+    field_type: measure
+    type: count_distinct
+    label: Lost Members Latest
+    description: Total unique number of Members Latest Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date)
+      = EOMONTH(GETDATE(), -4) THEN ${custid} END
+    canon_date: customers.data_period
+
+  - name: Lost_Members_Prior
+    field_type: measure
+    type: count_distinct
+    label: Lost Deposit Accounts Prior
+    description: Total lost unique number of Members prior Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 1 AND CAST(${data_period_date} AS date)
+      = EOMONTH(GETDATE(), -10) THEN ${custid} END
+    canon_date: customers.data_period
+
+  - name: lost_members_difference
+    field_type: measure
+    type: number
+    label: Lost Members Difference
+    description: >-
+      difference between the total Members prior data period and latest data
+      period
+    value_format_name: decimal_0
+    sql: ${customers.Lost_Members_Latest}-${customers.Lost_Members_Prior}
+    canon_date: data_period
+
+  - name: Lost_Members_Percent_Change
+    field_type: measure
+    type: number
+    label: Lost Members % Change
+    description: percentage of Members change
+    value_format_name: percent_2
+    sql: >-
+      CAST(${customers.lost_members_difference} AS DECIMAL(38,6)) /
+      NULLIF(CAST(${customers.Lost_Members_Prior} AS DECIMAL(38,6)), 0)
+    canon_date: customers.data_period
+
+  - name: average_customer_age
+    field_type: measure
+    type: average
+    label: Average Member Age
+    description: This is the age of the customer in years
+    sql: ${TABLE}.agec
+    canon_date: data_period
+
+  - name: New_Members_Latest
+    field_type: measure
+    type: count_distinct
+    label: New Members Latest
+    description: Total unique number of New Members Latest Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 0 AND ${status}=2 AND
+      CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${custid}
+      END
+    canon_date: customers.data_period
+
+  - name: New_Members_Prior
+    field_type: measure
+    type: count_distinct
+    label: New Deposit Accounts Prior
+    description: Total New unique number of Members prior Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 0 AND ${status}=2 AND
+      CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${custid}
+      END
+    canon_date: customers.data_period
+
+  - name: new_members_difference
+    field_type: measure
+    type: number
+    label: New Members Difference
+    description: >-
+      difference between the total New Members prior data period and latest data
+      period
+    value_format_name: decimal_0
+    sql: ${customers.New_Members_Latest}-${customers.New_Members_Prior}
+    canon_date: data_period
+
+  - name: New_Members_Percent_Change
+    field_type: measure
+    type: number
+    label: New Members % Change
+    description: percentage of New Members change
+    value_format_name: percent_2
+    sql: >-
+      CAST(${customers.New_members_difference} AS DECIMAL(38,6)) /
+      NULLIF(CAST(${customers.New_Members_Prior} AS DECIMAL(38,6)), 0)
+    canon_date: customers.data_period
+
+  - name: member_profit
+    field_type: measure
+    type: average
+    description: Member Profit
+    canon_date: customers.data_period
+    label: Average Member Profit
+    sql: ${customer_profit.profit}
+    value_format_name: usd_2
+
+  - name: Members_Count_Latest
+    field_type: measure
+    type: count_distinct
+    label: Members Latest
+    description: Total unique number of Members Latest Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 0 AND
+      CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -4) THEN ${custid}
+      END
+    canon_date: customers.data_period
+
+  - name: Members_Prior
+    field_type: measure
+    type: count_distinct
+    label: Members Prior
+    description: Total unique number of Members prior Completed Month
+    value_format_name: decimal_0
+    sql: >-
+      CASE WHEN COALESCE(${islost}, 0) = 0 AND
+      CAST(${data_period_date} AS date) = EOMONTH(GETDATE(), -10) THEN ${custid}
+      END
+    canon_date: customers.data_period
+
+  - name: members_difference
+    field_type: measure
+    type: number
+    label: Members Difference
+    description: >-
+      difference between the total Members prior data period and latest data
+      period
+    value_format_name: decimal_0
+    sql: ${customers.Members_Count_Latest}-${customers.Members_Prior}
+    canon_date: data_period
+
+  - name: Members_Percent_Change
+    field_type: measure
+    type: number
+    label: Members % Change
+    description: percentage of New Members change
+    value_format_name: percent_2
+    sql: >-
+      CAST(${customers.members_difference} AS DECIMAL(38,6)) /
+      NULLIF(CAST(${customers.Members_Prior} AS DECIMAL(38,6)), 0)
+    canon_date: customers.data_period
+
+
+  - name: SIC_Description
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: SIC Division Description
+    description: SIC Division Description
+    sql: >-
+      CASE 
+      WHEN ${sicdiv} = 'A' THEN 'Agriculture, Foresty, Fishing'
+      WHEN ${sicdiv} = 'B' THEN 'Mining'
+      WHEN ${sicdiv} = 'C' THEN 'Construction'
+      WHEN ${sicdiv} = 'D' THEN 'Manufacturing'
+      WHEN ${sicdiv} = 'E' THEN 'Transportation, Communication, Electric, Gas'
+      WHEN ${sicdiv} = 'F' THEN 'Wholesale Trade'
+      WHEN ${sicdiv} = 'G' THEN 'Retail Trade'
+      WHEN ${sicdiv} = 'H' THEN 'Finance, Insurance, Real Estate'
+      WHEN ${sicdiv} = 'I' THEN 'Services'
+      WHEN ${sicdiv} = 'J' THEN 'Public Administration'
+      ELSE 'Unassigned'
+      END
+    searchable: true
+
+  - name: SIC2_Description
+    field_type: dimension
+    type: string
+    hidden: false
+    primary_key: false
+    label: SIC2 Description
+    description: SIC2 Code Definition
+    sql: >-
+      CASE
+        WHEN ${sic2} = '211' THEN 'Beef Cattle Feedlots'
+        WHEN ${sic2} = '115' THEN 'Corn'
+        WHEN ${sic2} = '722' THEN 'Crop Harvesting, Primarily by Machine'
+        WHEN ${sic2} = '721' THEN 'Crop Planting, Cultivating, and Protecting'
+        WHEN ${sic2} = '213' THEN 'Hogs'
+        WHEN ${sic2} = '112' THEN 'Rice'
+        WHEN ${sic2} = '711' THEN 'Soil Preparation Services'
+        WHEN ${sic2} = '811' THEN 'Timber Tracts'
+        WHEN ${sic2} = '111' THEN 'Wheat'
+        ELSE 'Unassigned'
+      END
+    searchable: true

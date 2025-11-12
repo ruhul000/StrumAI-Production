@@ -1,0 +1,58 @@
+type: topic
+base_view: household_profit
+model_name: strum_platform_model
+label: Household Profit Analysis
+description: >-
+  The Household Profit Analysis topic contains data related to the financial
+  metrics and profitability of households. It includes fields for balance sheets
+  (e.g., household_profit.HIDEPBAL), liquid deposits
+  (household_profit.DEPLIQUID), and overall profit metrics
+  (household_profit.PROFIT, household_profit.AVGPROFIT). It categorizes
+  households by profitability (household_profit.PROFCAT) and customer segment
+  (household_profit.CUSTSEG), while providing percentages for profitability and
+  deposit allocations. This data is crucial for understanding household
+  profitability trends and should always be filtered by a specific month to
+  ensure validity.
+zoe_description: >-
+  This dataset covers monthly financial indicators of household profitability.
+  It includes fields like total profit, average profit, balance sheets, and
+  various profitability categories. Filter the data by the specified month for
+  accurate analysis. The fields offer insights into deposit liquidity,
+  profitability categories, and customer segments to support financial trend
+  assessments.
+hidden: false
+views:
+  households:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${household_profit.hhid},
+        ${household_profit.data_period_raw})=concat(${households.hhid},
+        ${households.data_period_raw})
+  branch:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${households.branchid},${households.data_period_raw})
+        =concat(${branch.branchid},${branch.data_period_raw})
+  lifestyle:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${households.lifestyle}=${lifestyle.code}
+  average_household_derived:
+    join:
+      join_type: left_outer
+      relationship: many_to_many
+      sql_on: >-
+        ${average_household_derived.data_period_raw} =
+        ${households.data_period_raw}
+  customers:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${customers.branchid},${customers.data_period_raw})
+        =concat(${branch.branchid},${branch.data_period_raw})

@@ -1,0 +1,10 @@
+dashboard-paths:
+  - dashboards
+model-paths:
+  - models
+name: strum_platform
+profile: strum
+topic-paths:
+  - topics
+view-paths:
+  - views

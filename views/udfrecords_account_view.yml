@@ -1,0 +1,284 @@
+version: 1
+type: view
+name: udfrecords_account
+model_name: strum_platform_model
+sql_table_name: dbo.UDFRecordsAccount
+default_date: data_period
+identifiers:
+- name: acctid
+  type: primary
+  sql: concat(${acctid}, ${data_period_raw})
+
+fields:
+- name: id
+  field_type: dimension
+  type: number
+  sql: ${TABLE}."ID"
+
+- name: custid
+  field_type: dimension
+  type: string
+  sql: ${TABLE}."CustId"
+  searchable: false
+
+- name: acctid
+  field_type: dimension
+  type: string
+  primary_key: true
+
+  sql: ${TABLE}."AcctId"
+  searchable: false
+- name: loanid
+  field_type: dimension
+  type: string
+  sql: ${TABLE}."LoanID"
+  searchable: false
+
+- name: dataperiod
+  field_type: dimension
+  type: string
+  sql: ${TABLE}."DataPeriod"
+  searchable: true
+
+- name: csfatm
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFATM"
+
+- name: csfdebitcard
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDebitCard"
+
+- name: csfolb
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFOLB"
+
+- name: csfbillpay
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFBillPay"
+
+- name: csfdirdep
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDirDep"
+
+- name: csfmobile
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFMobile"
+
+- name: csfindirect
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFIndirect"
+
+- name: csfnobatchnotrans
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFNoBatchNoTrans"
+
+- name: csfbankruptcy
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFBankruptcy"
+
+- name: csfdelinquent
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDelinquent"
+
+- name: csfcourtesypayexclude
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFCourtesyPayExclude"
+
+- name: csfdebitcardrestrict
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDebitCardRestrict"
+
+- name: csfcollections
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFCollections"
+
+- name: csfmobdepsuspend
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFMobDepSuspend"
+
+- name: csfoutforrepos
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFOutforRepos"
+
+- name: csfdelinquency
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDelinquency"
+
+- name: csfatmdeprestrict
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFATMDepRestrict"
+
+- name: csfdeceased
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDeceased"
+
+- name: csfcourtesypay
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFCourtesyPay"
+
+- name: csfmobaccessrestrict
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFMobAccessRestrict"
+
+- name: csfnegshareplan
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFNegSharePlan"
+
+- name: csfregenoresponse
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFRegENoResponse"
+
+- name: csfchargedoff
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFChargedOff"
+
+- name: csforgacct
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFOrgAcct"
+
+- name: csfdisabledmemb
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDisabledMemb"
+
+- name: csfglobalmarket
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFGlobalMarket"
+
+- name: csfdigitalwallet
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFDigitalWallet"
+
+- name: csfoptinmember
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFOptInMember"
+
+- name: csfstudentloans
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFStudentLoans"
+
+- name: csfsoldmortgage
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFSoldMortgage"
+
+- name: csfhsa
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFHSA"
+
+- name: csfbusinessdebit
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFBusinessDebit"
+
+- name: csfestatement
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFEStatement"
+
+- name: csfglobalmarketemp
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFGlobalMarketEmp"
+
+- name: csf_olbmobile
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSF_OlbMobile"
+
+- name: csfacctsvctxt
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFAcctSvcTxt"
+
+- name: csfmarketingtxt
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFMarketingTxt"
+
+- name: csfautocalltxt
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFAutoCallTxt"
+
+- name: csfprivacyact
+  field_type: dimension
+  type: yesno
+  sql: ${TABLE}."CSFPrivacyAct"
+
+- name: csfpastdueamount
+  field_type: dimension
+  type: number
+  sql: ${TABLE}."CSFPastDueAmount"
+
+- name: membertype
+  field_type: dimension
+  type: string
+  sql: ${TABLE}."MemberType"
+  searchable: true
+
+- name: IsIndirectAC
+  field_type: dimension
+  type: string
+  hidden: false
+  label: Indirect CSF
+  sql: CASE WHEN ${CSFIndirect}= 1 THEN 'Indirect' ELSE 'Direct' END
+  searchable: true
+- name: csfduedate
+  field_type: dimension_group
+  type: time
+  datatype: date
+  timeframes:
+  - raw
+  - date
+  - day_of_year
+  - week
+  - week_of_year
+  - month
+  - month_of_year
+  - quarter
+  - year
+  sql: ${TABLE}."CSFDueDate"
+
+- name: data_period
+  field_type: dimension_group
+  type: time
+  datatype: date
+  description: >-
+    This is the period of the snapshot, and it is always the date of the end
+    of the month
+  timeframes:
+  - raw
+  - date
+  - month
+  sql: ${TABLE}.DataPeriod
+

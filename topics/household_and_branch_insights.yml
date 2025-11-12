@@ -1,0 +1,35 @@
+type: topic
+base_view: households
+model_name: strum_platform_model
+label: Household and Branch Insights
+description: >-
+  This dataset provides a comprehensive view of households, branches, and
+  lifestyle profiles. The 'households' view captures detailed monthly snapshots
+  of household data, requiring filtering by a specific month's end date for
+  accuracy. It includes demographic, financial, and contact information. The
+  'branch' view contains details about physical bank branches, like location and
+  establishment data. The 'lifestyle' view offers insights into the lifestyle
+  characteristics of households, including average age, income, and interests.
+  This model supports analysis of customer and branch interactions, lifestyle
+  segmentation, and location-based services.
+zoe_description: >-
+  This dataset provides detailed monthly household snapshots, requiring a
+  specific period filter for accurate analysis. It includes household
+  demographics, services, and contact preferences. Branch details cover physical
+  location attributes. Lifestyle data offers insights into demographics and
+  interests. Use this data for customer segmentation, service needs analysis,
+  and geographic insights related to branch and lifestyle attributes.
+hidden: false
+views:
+  branch:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: >-
+        concat(${households.branchid},${households.data_period_raw})
+        =concat(${branch.branchid},${branch.data_period_raw})
+  lifestyle:
+    join:
+      join_type: left_outer
+      relationship: many_to_one
+      sql_on: ${households.lifestyle}=${lifestyle.code}
